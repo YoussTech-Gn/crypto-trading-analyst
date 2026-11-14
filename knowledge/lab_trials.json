@@ -1,0 +1,33 @@
+{
+ "recipes": [
+  "sweep_fvg",
+  "sweep_only",
+  "fvg_only",
+  "bos_retest",
+  "fvg_entry_upper",
+  "fvg_entry_lower",
+  "fvg_stop_half",
+  "fvg_stop_2atr",
+  "fvg_stop_struct",
+  "fvg_exit_1r",
+  "fvg_exit_1_5r",
+  "fvg_exit_be",
+  "fvg_exit_partial",
+  "fvg_exit_time",
+  "fvg_volume",
+  "brk20_trail",
+  "brk55_trail",
+  "brk20_vol_trail",
+  "brk20_btc_trail",
+  "pullback_ema20",
+  "pullback_ema20_trail",
+  "rsi_dip_30",
+  "rsi_dip_35",
+  "fvg_btc",
+  "combo_upper_2atr",
+  "combo_upper_vol",
+  "combo_upper_2atr_vol",
+  "combo_upper_btc",
+  "combo_upper_2atr_btc"
+ ]
+}

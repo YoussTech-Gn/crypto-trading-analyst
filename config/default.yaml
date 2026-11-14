@@ -1,0 +1,177 @@
+# Provisional Configuration Defaults (Milestone 1)
+# Note: Numeric values below are initial engineering configuration defaults,
+# NOT validated trading-performance assumptions.
+
+exchange:
+  name: binance
+  market: spot
+  quote_asset: USDT
+  base_url: "https://api.binance.com"
+  request_timeout_seconds: 10.0
+  max_retries: 3
+  retry_backoff_seconds: 0.5
+  max_rate_limit_weight_per_minute: 1200
+
+universe:
+  max_candidates: 30
+  min_quote_volume_24h: 10000000.0
+  max_spread_bps: 20.0
+  max_ticker_age_seconds: 300
+  excluded_assets: []
+  excluded_stablecoin_base_assets:
+    - USDC
+    - FDUSD
+    - TUSD
+    - USDP
+    - DAI
+    - BUSD
+    - USDE
+    - USDT
+    - EUR
+    - AEUR
+    - EURI
+    - GBP
+    - TRY
+    - BRL
+    - BIDR
+    - IDRT
+    - UAH
+    - RUB
+    - NGN
+    - PLN
+    - RON
+    - ARS
+    - ZAR
+    - JPY
+    - PAX
+    - VAI
+    - USTC
+    - USD1
+    - RLUSD
+    - U
+    - USDS
+    - PYUSD
+    - RWUSD
+  excluded_leveraged_suffixes:
+    - UP
+    - DOWN
+    - BULL
+    - BEAR
+  excluded_leveraged_base_assets:
+    - BTCUP
+    - BTCDOWN
+    - ETHUP
+    - ETHDOWN
+    - BNBUP
+    - BNBDOWN
+    - ADAUP
+    - ADADOWN
+    - LINKUP
+    - LINKDOWN
+    - XRPUP
+    - XRPDOWN
+    - DOTUP
+    - DOTDOWN
+    - EOSUP
+    - EOSDOWN
+    - TRXUP
+    - TRXDOWN
+    - LTCUP
+    - LTCDOWN
+    - UNIUP
+    - UNIDOWN
+    - SXPUP
+    - SXPDOWN
+    - FILUP
+    - FILDOWN
+    - YFIUP
+    - YFIDOWN
+    - XTUP
+    - XTDOWN
+    - AAVEUP
+    - AAVEDOWN
+    - SUSHIUP
+    - SUSHIDOWN
+    - 1INCHUP
+    - 1INCHDOWN
+
+  # Display/filter categories only. Unlisted assets are shown as CRYPTO.
+  asset_categories:
+    TOKENIZED_STOCK:
+      - NVDAB
+      - SPCXB
+      - SOXLB
+      - SNDKB
+      - GOOGLB
+      - AAPLB
+      - ADBEB
+      - AMATB
+      - AMDB
+      - AMZNB
+      - ASMLB
+      - AVGOB
+      - BABAB
+      - APPB
+      - ARMB
+      - MUB
+      - CRCLB
+      - AAOIB
+      - ASTSB
+      - AXTIB
+      - ALABB
+      - AMCB
+    COMMODITY:
+      - XAUT
+      - PAXG
+
+timeframes:
+  context: 1d
+  setup: 4h
+  use_closed_candles: true
+  min_closed_candles_1d: 200
+  min_closed_candles_4h: 500
+  max_close_delay_seconds: 300
+
+strategy:
+  active_version: baseline-1.0
+  direction: long_only
+  minimum_reward_to_risk: 2.0
+
+risk:
+  mode: paper
+  simulated_equity: 10000.0
+  risk_per_trade_percent: 1.0
+  max_open_positions: 3
+
+execution:
+  real_orders_enabled: false
+  paper_trading_enabled: true
+
+# Provisional analysis parameters (Milestone 3). Engineering defaults, NOT validated trading edge.
+analysis:
+  swing_lookback: 3
+  min_confirmed_swings: 2
+  ema_fast: 50
+  ema_slow: 200
+  rsi_period: 14
+  atr_period: 14
+  relative_volume_period: 20
+  equal_level_tolerance_pct: 0.1
+  min_sweep_penetration_pct: 0.05
+
+# Provisional paper-signal parameters (Milestone 4). Engineering defaults, NOT validated trading edge.
+signals:
+  sweep_window_candles: 6
+  max_entry_distance_atr: 1.0
+  stop_atr_buffer: 0.25
+  expiry_candles: 6
+
+# Provisional backtest assumptions (Milestone 5). Conservative: stop before target in the same candle,
+# fees both sides, slippage on stops. A result with fewer than min_trades_for_confidence trades is NOT trusted.
+backtest:
+  fee_pct_per_side: 0.1
+  stop_slippage_pct: 0.05
+  max_hold_candles: 30
+  min_trades_for_confidence: 30
+  analysis_window_4h: 600
+  analysis_window_1d: 300

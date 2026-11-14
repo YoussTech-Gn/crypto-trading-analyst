@@ -1,0 +1,38 @@
+DATA ANOMALY SCAN since 2020-05-01  (candles the validator would reject, one by one)
+
+BTCUSDT 4h: candles=14329 broken=7 gaps=0
+  BROKEN 2020-06-28 00:00  Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1593302400000
+  BROKEN 2020-12-21 12:00  Unexpected candle duration 6440521ms for timeframe interval 14400000ms at 1608552000000
+  BROKEN 2021-02-11 00:00  Unexpected candle duration 13254773ms for timeframe interval 14400000ms at 1613001600000
+  BROKEN 2021-04-20 00:00  Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1618876800000
+  BROKEN 2021-04-25 04:00  Unexpected candle duration 58146ms for timeframe interval 14400000ms at 1619323200000
+  BROKEN 2021-08-13 00:00  Unexpected candle duration 7199000ms for timeframe interval 14400000ms at 1628812800000
+  BROKEN 2021-09-29 04:00  Unexpected candle duration 10799999ms for timeframe interval 14400000ms at 1632888000000
+  first broken: 2020-06-28 00:00   last broken: 2021-09-29 04:00
+
+BTCUSDT 1d: candles=2389 broken=0 gaps=0
+
+ETHUSDT 4h: candles=14329 broken=7 gaps=0
+  BROKEN 2020-06-28 00:00  Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1593302400000
+  BROKEN 2020-12-21 12:00  Unexpected candle duration 6440528ms for timeframe interval 14400000ms at 1608552000000
+  BROKEN 2021-02-11 00:00  Unexpected candle duration 13255829ms for timeframe interval 14400000ms at 1613001600000
+  BROKEN 2021-04-20 00:00  Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1618876800000
+  BROKEN 2021-04-25 04:00  Unexpected candle duration 59271ms for timeframe interval 14400000ms at 1619323200000
+  BROKEN 2021-08-13 00:00  Unexpected candle duration 7199000ms for timeframe interval 14400000ms at 1628812800000
+  BROKEN 2021-09-29 04:00  Unexpected candle duration 10799999ms for timeframe interval 14400000ms at 1632888000000
+  first broken: 2020-06-28 00:00   last broken: 2021-09-29 04:00
+
+ETHUSDT 1d: candles=2389 broken=0 gaps=0
+
+SOLUSDT 4h: candles=13716 broken=6 gaps=0
+  BROKEN 2020-12-21 12:00  Unexpected candle duration 6443498ms for timeframe interval 14400000ms at 1608552000000
+  BROKEN 2021-02-11 00:00  Unexpected candle duration 13257968ms for timeframe interval 14400000ms at 1613001600000
+  BROKEN 2021-04-20 00:00  Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1618876800000
+  BROKEN 2021-04-25 04:00  Unexpected candle duration 61539ms for timeframe interval 14400000ms at 1619323200000
+  BROKEN 2021-08-13 00:00  Unexpected candle duration 7199000ms for timeframe interval 14400000ms at 1628812800000
+  BROKEN 2021-09-29 04:00  Unexpected candle duration 10799999ms for timeframe interval 14400000ms at 1632888000000
+  first broken: 2020-12-21 12:00   last broken: 2021-09-29 04:00
+
+SOLUSDT 1d: candles=2287 broken=0 gaps=0
+
+Broken days across symbols (day: count): {'2020-06-28': 2, '2020-12-21': 3, '2021-02-11': 3, '2021-04-20': 3, '2021-04-25': 3, '2021-08-13': 3, '2021-09-29': 3}

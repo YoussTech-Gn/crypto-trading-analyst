@@ -1,0 +1,49 @@
+run at 2026-11-14T00:55:19.794475+00:00
+=== run_scan.py (exit 0) ===
+snapshot 6dce2cb403454d1a9281dacfe22ceee5 at 2026-11-14T00:55:20.181769+00:00
+evaluated=775 shortlisted=30
+  1  BTCUSDT        CRYPTO          vol24h=   2,003,191,004  chg=  -3.94%  spread= 0.00bps
+  2  ETHUSDT        CRYPTO          vol24h=     721,607,999  chg=  -4.00%  spread= 0.05bps
+  3  SOLUSDT        CRYPTO          vol24h=     295,995,338  chg=  -4.52%  spread= 1.29bps
+  4  ZECUSDT        CRYPTO          vol24h=     232,235,949  chg=  -2.48%  spread= 0.11bps
+  5  NVDABUSDT      TOKENIZED_STOCK vol24h=     156,719,325  chg=  -3.87%  spread= 0.62bps
+  6  XRPUSDT        CRYPTO          vol24h=     138,096,735  chg=  -2.31%  spread= 0.99bps
+  7  BNBUSDT        CRYPTO          vol24h=     130,722,724  chg=  -3.87%  spread= 0.16bps
+  8  NEARUSDT       CRYPTO          vol24h=      96,297,903  chg=  +0.73%  spread= 2.90bps
+  9  SPCXBUSDT      TOKENIZED_STOCK vol24h=      73,092,157  chg=  -3.84%  spread= 0.73bps
+ 10  SOXLBUSDT      TOKENIZED_STOCK vol24h=      53,740,743  chg= -17.20%  spread= 1.79bps
+ 11  UNIUSDT        CRYPTO          vol24h=      49,135,949  chg=  -5.81%  spread= 1.74bps
+ 12  HYPEUSDT       CRYPTO          vol24h=      42,563,125  chg=  -1.87%  spread= 1.39bps
+ 13  ENAUSDT        CRYPTO          vol24h=      41,112,696  chg=  -4.34%  spread= 7.43bps
+ 14  DOGEUSDT       CRYPTO          vol24h=      38,297,798  chg=  -2.74%  spread= 1.55bps
+ 15  SUIUSDT        CRYPTO          vol24h=      33,055,610  chg=  -1.40%  spread= 1.26bps
+ 16  TRXUSDT        CRYPTO          vol24h=      31,725,665  chg=  -1.11%  spread= 3.20bps
+ 17  SNDKBUSDT      TOKENIZED_STOCK vol24h=      30,553,684  chg=  -9.48%  spread= 0.12bps
+ 18  SHELLUSDT      CRYPTO          vol24h=      27,367,514  chg= +77.48%  spread=11.61bps
+ 19  LINKUSDT       CRYPTO          vol24h=      22,476,318  chg=  -2.64%  spread= 1.02bps
+ 20  TAOUSDT        CRYPTO          vol24h=      22,344,647  chg=  +2.61%  spread= 4.62bps
+ 21  AVAXUSDT       CRYPTO          vol24h=      22,080,135  chg=  -1.15%  spread= 1.21bps
+ 22  INJUSDT        CRYPTO          vol24h=      21,479,812  chg=  +8.37%  spread= 1.24bps
+ 23  ADAUSDT        CRYPTO          vol24h=      20,821,864  chg=  -4.22%  spread= 5.96bps
+ 24  XAUTUSDT       COMMODITY       vol24h=      20,748,472  chg=  -0.15%  spread= 0.03bps
+ 25  GOOGLBUSDT     TOKENIZED_STOCK vol24h=      17,072,643  chg=  -2.25%  spread= 0.34bps
+ 26  LTCUSDT        CRYPTO          vol24h=      15,759,693  chg=  -1.67%  spread= 2.02bps
+ 27  CRCLBUSDT      TOKENIZED_STOCK vol24h=      14,363,380  chg=  -4.14%  spread= 1.63bps
+ 28  MUBUSDT        TOKENIZED_STOCK vol24h=      13,531,253  chg=  -6.57%  spread= 0.13bps
+ 29  ARBUSDT        CRYPTO          vol24h=      13,314,738  chg=  -4.57%  spread= 6.94bps
+ 30  WLDUSDT        CRYPTO          vol24h=      13,245,742  chg=  -1.99%  spread= 3.39bps
+=== run_signals.py (exit 0) ===
+analysed=30  SIGNAL=0  NO_TRADE=30
+Why NO_TRADE (count of symbols failing each check):
+   22  DAILY_TREND_BULLISH
+   16  RECENT_SELL_SIDE_SWEEP
+    8  DATA_INVALID:1d:INSUFFICIENT_HISTORY
+    5  OPEN_FVG_AFTER_SWEEP
+    1  REWARD_TO_RISK_OK
+Closest to a signal (valid data only):
+  BTCUSDT      fails 2: DAILY_TREND_BULLISH, RECENT_SELL_SIDE_SWEEP
+  ETHUSDT      fails 2: DAILY_TREND_BULLISH, OPEN_FVG_AFTER_SWEEP
+  SOLUSDT      fails 2: DAILY_TREND_BULLISH, OPEN_FVG_AFTER_SWEEP
+  ZECUSDT      fails 2: DAILY_TREND_BULLISH, RECENT_SELL_SIDE_SWEEP
+  XRPUSDT      fails 2: DAILY_TREND_BULLISH, RECENT_SELL_SIDE_SWEEP
+Excluded for data (fail-closed, usually new listings): NVDABUSDT, SPCXBUSDT, SOXLBUSDT, HYPEUSDT, SNDKBUSDT, GOOGLBUSDT, CRCLBUSDT, MUBUSDT

@@ -1,0 +1,270 @@
+STRATEGY LAB  2026-11-14T09:27:00.854566+00:00  basket=main  tag=main  windows=[0, 730, 1460]  days=730  as_of_ms=1794643200000  offline=True
+goal (provisional): {'min_avg_r': 0.2, 'min_profit_factor': 1.3, 'max_negative_windows': 1, 'max_drawdown_r': 20.0, 'min_pooled_trades': 100, 'min_trades_per_window': 10}
+recipes tried so far (all runs): 29  ->  confidence z=2.92 (stricter as more recipes are tried)
+
+RANKING (closest to goal first)
+  rsi_dip_30        criteria_met=3/6 trades= 124 avgR=-0.013 ciLower=-0.446 (naive -0.295) PF=0.97 maxDD=18.91R  meets_goal=False
+  brk55_trail       criteria_met=2/6 trades= 456 avgR=+0.067 ciLower=-0.122 (naive -0.115) PF=1.13 maxDD=21.71R  meets_goal=False
+  brk20_btc_trail   criteria_met=2/6 trades= 366 avgR=+0.131 ciLower=-0.163 (naive -0.093) PF=1.26 maxDD=21.76R  meets_goal=False
+  brk20_trail       criteria_met=2/6 trades= 682 avgR=+0.017 ciLower=-0.171 (naive -0.136) PF=1.03 maxDD=41.43R  meets_goal=False
+  brk20_vol_trail   criteria_met=2/6 trades= 556 avgR=+0.010 ciLower=-0.201 (naive -0.157) PF=1.02 maxDD=56.04R  meets_goal=False
+  combo_upper_vol   criteria_met=2/6 trades= 483 avgR=+0.045 ciLower=-0.233 (naive -0.165) PF=1.07 maxDD=60.02R  meets_goal=False
+  combo_upper_btc   criteria_met=2/6 trades= 402 avgR=+0.082 ciLower=-0.267 (naive -0.145) PF=1.12 maxDD=51.76R  meets_goal=False
+  fvg_btc           criteria_met=2/6 trades= 406 avgR=+0.014 ciLower=-0.31 (naive -0.211) PF=1.02 maxDD=54.14R  meets_goal=False
+  combo_upper_2atr_vol criteria_met=2/6 trades= 296 avgR=-0.000 ciLower=-0.317 (naive -0.23) PF=1.0 maxDD=42.39R  meets_goal=False
+  pullback_ema20_trail criteria_met=1/6 trades= 988 avgR=-0.015 ciLower=-0.178 (naive -0.134) PF=0.97 maxDD=55.06R  meets_goal=False
+  fvg_entry_upper   criteria_met=1/6 trades= 828 avgR=-0.032 ciLower=-0.261 (naive -0.189) PF=0.95 maxDD=102.83R  meets_goal=False
+  fvg_exit_1_5r     criteria_met=1/6 trades= 940 avgR=-0.118 ciLower=-0.276 (naive -0.234) PF=0.82 maxDD=147.05R  meets_goal=False
+  rsi_dip_35        criteria_met=1/6 trades= 342 avgR=-0.036 ciLower=-0.277 (naive -0.212) PF=0.93 maxDD=40.72R  meets_goal=False
+  fvg_exit_1r       criteria_met=1/6 trades=1005 avgR=-0.154 ciLower=-0.282 (naive -0.246) PF=0.74 maxDD=183.94R  meets_goal=False
+  fvg_exit_partial  criteria_met=1/6 trades= 880 avgR=-0.154 ciLower=-0.302 (naive -0.262) PF=0.73 maxDD=164.73R  meets_goal=False
+  combo_upper_2atr  criteria_met=1/6 trades= 486 avgR=-0.062 ciLower=-0.311 (naive -0.229) PF=0.89 maxDD=54.09R  meets_goal=False
+  pullback_ema20    criteria_met=1/6 trades= 653 avgR=-0.071 ciLower=-0.32 (naive -0.243) PF=0.9 maxDD=95.92R  meets_goal=False
+  fvg_stop_2atr     criteria_met=1/6 trades= 497 avgR=-0.087 ciLower=-0.321 (naive -0.254) PF=0.86 maxDD=64.22R  meets_goal=False
+  fvg_exit_be       criteria_met=1/6 trades= 880 avgR=-0.153 ciLower=-0.325 (naive -0.282) PF=0.75 maxDD=171.33R  meets_goal=False
+  fvg_volume        criteria_met=1/6 trades= 467 avgR=-0.042 ciLower=-0.34 (naive -0.258) PF=0.94 maxDD=64.56R  meets_goal=False
+  fvg_entry_lower   criteria_met=1/6 trades= 846 avgR=-0.137 ciLower=-0.342 (naive -0.293) PF=0.83 maxDD=174.97R  meets_goal=False
+  fvg_exit_time     criteria_met=1/6 trades= 848 avgR=-0.123 ciLower=-0.342 (naive -0.276) PF=0.84 maxDD=152.2R  meets_goal=False
+  fvg_stop_half     criteria_met=1/6 trades=1178 avgR=-0.156 ciLower=-0.344 (naive -0.3) PF=0.81 maxDD=232.03R  meets_goal=False
+  fvg_only          criteria_met=1/6 trades= 844 avgR=-0.123 ciLower=-0.347 (naive -0.277) PF=0.84 maxDD=154.18R  meets_goal=False
+  fvg_stop_struct   criteria_met=1/6 trades= 594 avgR=-0.138 ciLower=-0.382 (naive -0.305) PF=0.8 maxDD=106.25R  meets_goal=False
+  combo_upper_2atr_btc criteria_met=1/6 trades= 224 avgR=-0.061 ciLower=-0.41 (naive -0.312) PF=0.9 maxDD=28.54R  meets_goal=False
+  bos_retest        criteria_met=1/6 trades= 333 avgR=-0.138 ciLower=-0.442 (naive -0.35) PF=0.79 maxDD=67.18R  meets_goal=False
+  sweep_fvg         criteria_met=1/6 trades= 188 avgR=-0.264 ciLower=-0.583 (naive -0.569) PF=0.66 maxDD=54.61R  meets_goal=False
+  sweep_only        criteria_met=1/6 trades=2066 avgR=-0.479 ciLower=-0.687 (naive -0.636) PF=0.55 maxDD=1015.99R  meets_goal=False
+
+--- rsi_dip_30: daily uptrend, 4H RSI crosses back up through 30 (oversold bounce), 1.5 ATR stop, 2 R target
+    parts: {'context': 'daily_bullish', 'trigger': 'rsi_cross_up_30', 'entry': 'close', 'stop': 'entry_minus_1_5atr', 'exit': 'fixed_2r_12_candles'}
+    windows: {'main:offset0': {'trades': 52, 'avg_r': -0.157}, 'main:offset730': {'trades': 45, 'avg_r': 0.046}, 'main:offset1460': {'trades': 27, 'avg_r': 0.167}}
+    win_rate=49.2% breakeven=49.9%  avg_fee_r=+0.043  weekly_clusters=51 se_naive=0.0966 se_clustered=0.1481
+    orders: signals=124 filled=124 unfilled=0 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: -0.01 < +0.20; PROFIT_FACTOR: 0.97 < 1.3; CONFIDENCE: lower bound -0.45R <= 0 (z=2.92 for 29 recipes tried, 51 weekly clusters)
+    WHY: WIN_RATE 49% is below breakeven 50% (needs +1 points); TIMEOUTS: 58/124 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 0.96R is too small against 1R risk
+
+--- brk55_trail: close above the 55-candle high in a daily uptrend, 2 ATR stop, trailing stop
+    parts: {'context': 'daily_bullish', 'trigger': 'breakout_55', 'entry': 'close', 'stop': 'entry_minus_2atr', 'exit': 'trailing_1r_after_1r'}
+    windows: {'main:offset0': {'trades': 120, 'avg_r': 0.262}, 'main:offset730': {'trades': 228, 'avg_r': -0.01}, 'main:offset1460': {'trades': 108, 'avg_r': 0.011}}
+    win_rate=48.9% breakeven=45.8%  avg_fee_r=+0.045  weekly_clusters=121 se_naive=0.062 se_clustered=0.0646
+    orders: signals=457 filled=456 unfilled=1 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: +0.07 < +0.20; PROFIT_FACTOR: 1.13 < 1.3; DRAWDOWN: 21.7R > 20.0R; CONFIDENCE: lower bound -0.12R <= 0 (z=2.92 for 29 recipes tried, 121 weekly clusters)
+    WHY: SMALL_WINS: average win 1.17R is too small against 1R risk
+
+--- brk20_btc_trail: 20-candle breakout only when the BTC daily trend is bullish
+    parts: {'context': 'daily_bullish', 'trigger': 'breakout_20', 'entry': 'close', 'stop': 'entry_minus_2atr', 'exit': 'trailing_1r_after_1r', 'filter': 'btc_daily_bullish'}
+    windows: {'main:offset0': {'trades': 85, 'avg_r': 0.323}, 'main:offset730': {'trades': 204, 'avg_r': 0.008}, 'main:offset1460': {'trades': 77, 'avg_r': 0.248}}
+    win_rate=48.9% breakeven=43.2%  avg_fee_r=+0.043  weekly_clusters=64 se_naive=0.0768 se_clustered=0.1006
+    orders: signals=367 filled=366 unfilled=1 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: +0.13 < +0.20; PROFIT_FACTOR: 1.26 < 1.3; DRAWDOWN: 21.8R > 20.0R; CONFIDENCE: lower bound -0.16R <= 0 (z=2.92 for 29 recipes tried, 64 weekly clusters)
+    WHY: SMALL_WINS: average win 1.30R is too small against 1R risk
+
+--- brk20_trail: close above the 20-candle high in a daily uptrend, 2 ATR stop, trailing stop, no profit target
+    parts: {'context': 'daily_bullish', 'trigger': 'breakout_20', 'entry': 'close', 'stop': 'entry_minus_2atr', 'exit': 'trailing_1r_after_1r'}
+    windows: {'main:offset0': {'trades': 190, 'avg_r': 0.099}, 'main:offset730': {'trades': 338, 'avg_r': -0.029}, 'main:offset1460': {'trades': 154, 'avg_r': 0.017}}
+    win_rate=45.5% breakeven=44.7%  avg_fee_r=+0.045  weekly_clusters=160 se_naive=0.0526 se_clustered=0.0645
+    orders: signals=683 filled=682 unfilled=1 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: +0.02 < +0.20; PROFIT_FACTOR: 1.03 < 1.3; DRAWDOWN: 41.4R > 20.0R; CONFIDENCE: lower bound -0.17R <= 0 (z=2.92 for 29 recipes tried, 160 weekly clusters)
+    WHY: SMALL_WINS: average win 1.23R is too small against 1R risk
+
+--- brk20_vol_trail: 20-candle breakout with relative volume >= 1.5
+    parts: {'context': 'daily_bullish', 'trigger': 'breakout_20', 'entry': 'close', 'stop': 'entry_minus_2atr', 'exit': 'trailing_1r_after_1r', 'filter': 'relative_volume_ge_1_5'}
+    windows: {'main:offset0': {'trades': 150, 'avg_r': 0.178}, 'main:offset730': {'trades': 285, 'avg_r': -0.089}, 'main:offset1460': {'trades': 121, 'avg_r': 0.037}}
+    win_rate=45.7% breakeven=45.2%  avg_fee_r=+0.046  weekly_clusters=148 se_naive=0.0572 se_clustered=0.0722
+    orders: signals=558 filled=556 unfilled=2 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: +0.01 < +0.20; PROFIT_FACTOR: 1.02 < 1.3; DRAWDOWN: 56.0R > 20.0R; CONFIDENCE: lower bound -0.20R <= 0 (z=2.92 for 29 recipes tried, 148 weekly clusters)
+    WHY: SMALL_WINS: average win 1.21R is too small against 1R risk
+
+--- combo_upper_vol: near-edge entry + relative volume >= 1
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'relative_volume_ge_1'}
+    windows: {'main:offset0': {'trades': 113, 'avg_r': 0.226}, 'main:offset730': {'trades': 236, 'avg_r': 0.024}, 'main:offset1460': {'trades': 134, 'avg_r': -0.072}}
+    win_rate=34.8% breakeven=33.4%  avg_fee_r=+0.070  weekly_clusters=160 se_naive=0.0716 se_clustered=0.0949
+    orders: signals=625 filled=483 unfilled=142 (missed winners: price reached the target without touching the limit = 48) still_open_at_data_end=0
+    MISSING: AVG_R: +0.04 < +0.20; PROFIT_FACTOR: 1.07 < 1.3; DRAWDOWN: 60.0R > 20.0R; CONFIDENCE: lower bound -0.23R <= 0 (z=2.92 for 29 recipes tried, 160 weekly clusters)
+    WHY: no dominant cause detected
+
+--- combo_upper_btc: near-edge entry + BTC daily trend bullish
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'btc_daily_bullish'}
+    windows: {'main:offset0': {'trades': 83, 'avg_r': 0.34}, 'main:offset730': {'trades': 205, 'avg_r': -0.036}, 'main:offset1460': {'trades': 114, 'avg_r': 0.107}}
+    win_rate=37.1% breakeven=34.4%  avg_fee_r=+0.067  weekly_clusters=77 se_naive=0.0777 se_clustered=0.1195
+    orders: signals=509 filled=402 unfilled=107 (missed winners: price reached the target without touching the limit = 42) still_open_at_data_end=0
+    MISSING: AVG_R: +0.08 < +0.20; PROFIT_FACTOR: 1.12 < 1.3; DRAWDOWN: 51.8R > 20.0R; CONFIDENCE: lower bound -0.27R <= 0 (z=2.92 for 29 recipes tried, 77 weekly clusters)
+    WHY: no dominant cause detected
+
+--- fvg_btc: fvg_only, only when the BTC daily trend is bullish
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'btc_daily_bullish'}
+    windows: {'main:offset0': {'trades': 87, 'avg_r': 0.265}, 'main:offset730': {'trades': 209, 'avg_r': -0.094}, 'main:offset1460': {'trades': 110, 'avg_r': 0.021}}
+    win_rate=34.7% breakeven=34.3%  avg_fee_r=+0.074  weekly_clusters=75 se_naive=0.0769 se_clustered=0.1108
+    orders: signals=558 filled=406 unfilled=152 (missed winners: price reached the target without touching the limit = 59) still_open_at_data_end=0
+    MISSING: AVG_R: +0.01 < +0.20; PROFIT_FACTOR: 1.02 < 1.3; DRAWDOWN: 54.1R > 20.0R; CONFIDENCE: lower bound -0.31R <= 0 (z=2.92 for 29 recipes tried, 75 weekly clusters)
+    WHY: no dominant cause detected
+
+--- combo_upper_2atr_vol: near-edge entry + 2 ATR stop + relative volume >= 1
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_2atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'relative_volume_ge_1'}
+    windows: {'main:offset0': {'trades': 67, 'avg_r': 0.18}, 'main:offset730': {'trades': 151, 'avg_r': 0.04}, 'main:offset1460': {'trades': 78, 'avg_r': -0.233}}
+    win_rate=37.5% breakeven=37.5%  avg_fee_r=+0.043  weekly_clusters=140 se_naive=0.0786 se_clustered=0.1083
+    orders: signals=389 filled=296 unfilled=93 (missed winners: price reached the target without touching the limit = 9) still_open_at_data_end=0
+    MISSING: AVG_R: -0.00 < +0.20; PROFIT_FACTOR: 1.0 < 1.3; DRAWDOWN: 42.4R > 20.0R; CONFIDENCE: lower bound -0.32R <= 0 (z=2.92 for 29 recipes tried, 140 weekly clusters)
+    WHY: WIN_RATE 38% is below breakeven 38% (needs +0 points); TIMEOUTS: 87/296 trades went nowhere (the idea lacks momentum)
+
+--- pullback_ema20_trail: same pullback trigger, trailing stop instead of a profit target
+    parts: {'context': 'daily_bullish', 'trigger': 'ema20_pullback', 'entry': 'close', 'stop': 'recent_low_5', 'exit': 'trailing_1r_after_1r'}
+    windows: {'main:offset0': {'trades': 287, 'avg_r': -0.009}, 'main:offset730': {'trades': 456, 'avg_r': -0.015}, 'main:offset1460': {'trades': 245, 'avg_r': -0.022}}
+    win_rate=48.4% breakeven=49.1%  avg_fee_r=+0.056  weekly_clusters=165 se_naive=0.0406 se_clustered=0.0556
+    orders: signals=989 filled=988 unfilled=0 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=1
+    MISSING: AVG_R: -0.02 < +0.20; PROFIT_FACTOR: 0.97 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 55.1R > 20.0R; CONFIDENCE: lower bound -0.18R <= 0 (z=2.92 for 29 recipes tried, 165 weekly clusters)
+    WHY: WIN_RATE 48% is below breakeven 49% (needs +1 points); SMALL_WINS: average win 1.05R is too small against 1R risk
+
+--- fvg_entry_upper: fvg_only, limit at the NEAR edge of the gap (fills more often, shallower)
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 198, 'avg_r': -0.004}, 'main:offset730': {'trades': 396, 'avg_r': -0.048}, 'main:offset1460': {'trades': 234, 'avg_r': -0.029}}
+    win_rate=33.1% breakeven=34.1%  avg_fee_r=+0.069  weekly_clusters=180 se_naive=0.0537 se_clustered=0.0784
+    orders: signals=1074 filled=828 unfilled=246 (missed winners: price reached the target without touching the limit = 79) still_open_at_data_end=0
+    MISSING: AVG_R: -0.03 < +0.20; PROFIT_FACTOR: 0.95 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 102.8R > 20.0R; CONFIDENCE: lower bound -0.26R <= 0 (z=2.92 for 29 recipes tried, 180 weekly clusters)
+    WHY: WIN_RATE 33% is below breakeven 34% (needs +1 points)
+
+--- fvg_exit_1_5r: fvg_only, fixed target at +1.5R
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'fixed_1_5r'}
+    windows: {'main:offset0': {'trades': 226, 'avg_r': -0.125}, 'main:offset730': {'trades': 449, 'avg_r': -0.178}, 'main:offset1460': {'trades': 265, 'avg_r': -0.01}}
+    win_rate=39.1% breakeven=43.9%  avg_fee_r=+0.081  weekly_clusters=183 se_naive=0.0396 se_clustered=0.0541
+    orders: signals=1307 filled=940 unfilled=367 (missed winners: price reached the target without touching the limit = 280) still_open_at_data_end=0
+    MISSING: AVG_R: -0.12 < +0.20; PROFIT_FACTOR: 0.82 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 147.0R > 20.0R; CONFIDENCE: lower bound -0.28R <= 0 (z=2.92 for 29 recipes tried, 183 weekly clusters)
+    WHY: WIN_RATE 39% is below breakeven 44% (needs +5 points); SMALL_WINS: average win 1.39R is too small against 1R risk
+
+--- rsi_dip_35: same as rsi_dip_30 with the level at 35
+    parts: {'context': 'daily_bullish', 'trigger': 'rsi_cross_up_35', 'entry': 'close', 'stop': 'entry_minus_1_5atr', 'exit': 'fixed_2r_12_candles'}
+    windows: {'main:offset0': {'trades': 98, 'avg_r': -0.11}, 'main:offset730': {'trades': 165, 'avg_r': -0.061}, 'main:offset1460': {'trades': 79, 'avg_r': 0.109}}
+    win_rate=43.0% breakeven=44.8%  avg_fee_r=+0.048  weekly_clusters=100 se_naive=0.0603 se_clustered=0.0826
+    orders: signals=343 filled=342 unfilled=1 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: -0.04 < +0.20; PROFIT_FACTOR: 0.93 < 1.3; STABILITY: negative in 2 windows ['main:offset0', 'main:offset730']; DRAWDOWN: 40.7R > 20.0R; CONFIDENCE: lower bound -0.28R <= 0 (z=2.92 for 29 recipes tried, 100 weekly clusters)
+    WHY: WIN_RATE 43% is below breakeven 45% (needs +2 points); TIMEOUTS: 138/342 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 1.10R is too small against 1R risk
+
+--- fvg_exit_1r: fvg_only, fixed target at +1R
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'fixed_1r'}
+    windows: {'main:offset0': {'trades': 241, 'avg_r': -0.138}, 'main:offset730': {'trades': 482, 'avg_r': -0.184}, 'main:offset1460': {'trades': 282, 'avg_r': -0.115}}
+    win_rate=46.8% breakeven=54.4%  avg_fee_r=+0.081  weekly_clusters=184 se_naive=0.0317 se_clustered=0.044
+    orders: signals=1400 filled=1005 unfilled=395 (missed winners: price reached the target without touching the limit = 382) still_open_at_data_end=0
+    MISSING: AVG_R: -0.15 < +0.20; PROFIT_FACTOR: 0.74 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 183.9R > 20.0R; CONFIDENCE: lower bound -0.28R <= 0 (z=2.92 for 29 recipes tried, 184 weekly clusters)
+    WHY: WIN_RATE 47% is below breakeven 54% (needs +8 points); FAST_STOPS: 231/535 losses hit the stop within 2 candles (entry or stop placement); SMALL_WINS: average win 0.91R is too small against 1R risk
+
+--- fvg_exit_partial: fvg_only, sell half at +1R, then break-even stop, rest to the structural target
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'half_at_1r_then_structure'}
+    windows: {'main:offset0': {'trades': 217, 'avg_r': -0.13}, 'main:offset730': {'trades': 418, 'avg_r': -0.189}, 'main:offset1460': {'trades': 245, 'avg_r': -0.118}}
+    win_rate=46.4% breakeven=54.1%  avg_fee_r=+0.079  weekly_clusters=182 se_naive=0.0367 se_clustered=0.0504
+    orders: signals=1225 filled=880 unfilled=345 (missed winners: price reached the target without touching the limit = 127) still_open_at_data_end=0
+    MISSING: AVG_R: -0.15 < +0.20; PROFIT_FACTOR: 0.73 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 164.7R > 20.0R; CONFIDENCE: lower bound -0.30R <= 0 (z=2.92 for 29 recipes tried, 182 weekly clusters)
+    WHY: WIN_RATE 46% is below breakeven 54% (needs +8 points); FAST_STOPS: 196/472 losses hit the stop within 2 candles (entry or stop placement); SMALL_WINS: average win 0.92R is too small against 1R risk
+
+--- combo_upper_2atr: near-edge entry + stop gap low minus 2 ATR
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_2atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 119, 'avg_r': -0.141}, 'main:offset730': {'trades': 232, 'avg_r': -0.002}, 'main:offset1460': {'trades': 135, 'avg_r': -0.096}}
+    win_rate=38.9% breakeven=41.6%  avg_fee_r=+0.042  weekly_clusters=164 se_naive=0.0571 se_clustered=0.085
+    orders: signals=639 filled=486 unfilled=153 (missed winners: price reached the target without touching the limit = 14) still_open_at_data_end=0
+    MISSING: AVG_R: -0.06 < +0.20; PROFIT_FACTOR: 0.89 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 54.1R > 20.0R; CONFIDENCE: lower bound -0.31R <= 0 (z=2.92 for 29 recipes tried, 164 weekly clusters)
+    WHY: WIN_RATE 39% is below breakeven 42% (needs +3 points); TIMEOUTS: 154/486 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 1.34R is too small against 1R risk
+
+--- pullback_ema20: uptrend (4H EMA20 > EMA50), the candle dipped to the EMA20 and closed back above it; structural target
+    parts: {'context': 'daily_bullish', 'trigger': 'ema20_pullback', 'entry': 'close', 'stop': 'recent_low_5', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 160, 'avg_r': -0.17}, 'main:offset730': {'trades': 299, 'avg_r': -0.148}, 'main:offset1460': {'trades': 194, 'avg_r': 0.129}}
+    win_rate=31.9% breakeven=34.2%  avg_fee_r=+0.068  weekly_clusters=158 se_naive=0.0587 se_clustered=0.0852
+    orders: signals=653 filled=653 unfilled=0 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: -0.07 < +0.20; PROFIT_FACTOR: 0.9 < 1.3; STABILITY: negative in 2 windows ['main:offset0', 'main:offset730']; DRAWDOWN: 95.9R > 20.0R; CONFIDENCE: lower bound -0.32R <= 0 (z=2.92 for 29 recipes tried, 158 weekly clusters)
+    WHY: WIN_RATE 32% is below breakeven 34% (needs +2 points)
+
+--- fvg_stop_2atr: fvg_only, stop = gap low minus 2 ATR (wider)
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_2atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 126, 'avg_r': -0.228}, 'main:offset730': {'trades': 232, 'avg_r': -0.042}, 'main:offset1460': {'trades': 139, 'avg_r': -0.034}}
+    win_rate=38.0% breakeven=41.7%  avg_fee_r=+0.045  weekly_clusters=163 se_naive=0.057 se_clustered=0.08
+    orders: signals=697 filled=497 unfilled=200 (missed winners: price reached the target without touching the limit = 16) still_open_at_data_end=0
+    MISSING: AVG_R: -0.09 < +0.20; PROFIT_FACTOR: 0.86 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 64.2R > 20.0R; CONFIDENCE: lower bound -0.32R <= 0 (z=2.92 for 29 recipes tried, 163 weekly clusters)
+    WHY: WIN_RATE 38% is below breakeven 42% (needs +4 points); TIMEOUTS: 140/497 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 1.36R is too small against 1R risk
+
+--- fvg_exit_be: fvg_only, stop moves to the entry once +1R is reached
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'breakeven_after_1r'}
+    windows: {'main:offset0': {'trades': 217, 'avg_r': -0.115}, 'main:offset730': {'trades': 418, 'avg_r': -0.198}, 'main:offset1460': {'trades': 245, 'avg_r': -0.107}}
+    win_rate=20.7% breakeven=25.8%  avg_fee_r=+0.079  weekly_clusters=182 se_naive=0.0442 se_clustered=0.059
+    orders: signals=1225 filled=880 unfilled=345 (missed winners: price reached the target without touching the limit = 127) still_open_at_data_end=0
+    MISSING: AVG_R: -0.15 < +0.20; PROFIT_FACTOR: 0.75 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 171.3R > 20.0R; CONFIDENCE: lower bound -0.33R <= 0 (z=2.92 for 29 recipes tried, 182 weekly clusters)
+    WHY: WIN_RATE 21% is below breakeven 26% (needs +5 points)
+
+--- fvg_volume: fvg_only, only when the setup candle volume is at least average
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'relative_volume_ge_1'}
+    windows: {'main:offset0': {'trades': 104, 'avg_r': 0.175}, 'main:offset730': {'trades': 237, 'avg_r': -0.117}, 'main:offset1460': {'trades': 126, 'avg_r': -0.079}}
+    win_rate=31.7% breakeven=33.0%  avg_fee_r=+0.080  weekly_clusters=151 se_naive=0.0741 se_clustered=0.1021
+    orders: signals=660 filled=467 unfilled=193 (missed winners: price reached the target without touching the limit = 82) still_open_at_data_end=0
+    MISSING: AVG_R: -0.04 < +0.20; PROFIT_FACTOR: 0.94 < 1.3; STABILITY: negative in 2 windows ['main:offset730', 'main:offset1460']; DRAWDOWN: 64.6R > 20.0R; CONFIDENCE: lower bound -0.34R <= 0 (z=2.92 for 29 recipes tried, 151 weekly clusters)
+    WHY: WIN_RATE 32% is below breakeven 33% (needs +1 points)
+
+--- fvg_entry_lower: fvg_only, limit at the FAR edge of the gap (fills rarely, deepest)
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_lower_edge', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 202, 'avg_r': -0.214}, 'main:offset730': {'trades': 409, 'avg_r': -0.201}, 'main:offset1460': {'trades': 235, 'avg_r': 0.041}}
+    win_rate=29.1% breakeven=33.2%  avg_fee_r=+0.088  weekly_clusters=183 se_naive=0.0536 se_clustered=0.0701
+    orders: signals=1248 filled=846 unfilled=402 (missed winners: price reached the target without touching the limit = 184) still_open_at_data_end=0
+    MISSING: AVG_R: -0.14 < +0.20; PROFIT_FACTOR: 0.83 < 1.3; STABILITY: negative in 2 windows ['main:offset0', 'main:offset730']; DRAWDOWN: 175.0R > 20.0R; CONFIDENCE: lower bound -0.34R <= 0 (z=2.92 for 29 recipes tried, 183 weekly clusters)
+    WHY: WIN_RATE 29% is below breakeven 33% (needs +4 points); FAST_STOPS: 243/600 losses hit the stop within 2 candles (entry or stop placement)
+
+--- fvg_exit_time: fvg_only, exit at the close after 8 candles if the best excursion is below +0.5R
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'time_decay_8_candles'}
+    windows: {'main:offset0': {'trades': 210, 'avg_r': -0.056}, 'main:offset730': {'trades': 405, 'avg_r': -0.208}, 'main:offset1460': {'trades': 233, 'avg_r': -0.037}}
+    win_rate=30.0% breakeven=33.9%  avg_fee_r=+0.079  weekly_clusters=181 se_naive=0.0521 se_clustered=0.0748
+    orders: signals=1183 filled=848 unfilled=335 (missed winners: price reached the target without touching the limit = 123) still_open_at_data_end=0
+    MISSING: AVG_R: -0.12 < +0.20; PROFIT_FACTOR: 0.84 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 152.2R > 20.0R; CONFIDENCE: lower bound -0.34R <= 0 (z=2.92 for 29 recipes tried, 181 weekly clusters)
+    WHY: WIN_RATE 30% is below breakeven 34% (needs +4 points)
+
+--- fvg_stop_half: fvg_only, stop = gap low minus 0.5 ATR (tighter)
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_0_5atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 298, 'avg_r': -0.246}, 'main:offset730': {'trades': 549, 'avg_r': -0.179}, 'main:offset1460': {'trades': 331, 'avg_r': -0.038}}
+    win_rate=27.8% breakeven=32.1%  avg_fee_r=+0.137  weekly_clusters=195 se_naive=0.0491 se_clustered=0.0643
+    orders: signals=1620 filled=1178 unfilled=442 (missed winners: price reached the target without touching the limit = 311) still_open_at_data_end=0
+    MISSING: AVG_R: -0.16 < +0.20; PROFIT_FACTOR: 0.81 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 232.0R > 20.0R; CONFIDENCE: lower bound -0.34R <= 0 (z=2.92 for 29 recipes tried, 195 weekly clusters)
+    WHY: WIN_RATE 28% is below breakeven 32% (needs +4 points); FAST_STOPS: 532/851 losses hit the stop within 2 candles (entry or stop placement)
+
+--- fvg_only: recent open bullish FVG in a daily uptrend, no sweep required
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'fvg_lower_minus_1atr', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 210, 'avg_r': -0.06}, 'main:offset730': {'trades': 403, 'avg_r': -0.208}, 'main:offset1460': {'trades': 231, 'avg_r': -0.033}}
+    win_rate=29.9% breakeven=33.7%  avg_fee_r=+0.079  weekly_clusters=181 se_naive=0.0527 se_clustered=0.0763
+    orders: signals=1180 filled=844 unfilled=336 (missed winners: price reached the target without touching the limit = 123) still_open_at_data_end=0
+    MISSING: AVG_R: -0.12 < +0.20; PROFIT_FACTOR: 0.84 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 154.2R > 20.0R; CONFIDENCE: lower bound -0.35R <= 0 (z=2.92 for 29 recipes tried, 181 weekly clusters)
+    WHY: WIN_RATE 30% is below breakeven 34% (needs +4 points)
+
+--- fvg_stop_struct: fvg_only, stop under the last swing low before the gap (at least 1 ATR from entry)
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_midpoint', 'stop': 'structural_swing_low', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 149, 'avg_r': -0.21}, 'main:offset730': {'trades': 276, 'avg_r': -0.111}, 'main:offset1460': {'trades': 169, 'avg_r': -0.118}}
+    win_rate=32.0% breakeven=37.0%  avg_fee_r=+0.059  weekly_clusters=172 se_naive=0.0572 se_clustered=0.0836
+    orders: signals=837 filled=594 unfilled=243 (missed winners: price reached the target without touching the limit = 51) still_open_at_data_end=0
+    MISSING: AVG_R: -0.14 < +0.20; PROFIT_FACTOR: 0.8 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 106.3R > 20.0R; CONFIDENCE: lower bound -0.38R <= 0 (z=2.92 for 29 recipes tried, 172 weekly clusters)
+    WHY: WIN_RATE 32% is below breakeven 37% (needs +5 points)
+
+--- combo_upper_2atr_btc: near-edge entry + 2 ATR stop + BTC daily trend bullish
+    parts: {'context': 'daily_bullish', 'trigger': 'recent_open_fvg', 'entry': 'fvg_upper_edge', 'stop': 'fvg_lower_minus_2atr', 'exit': 'first_swing_high_meeting_rr', 'filter': 'btc_daily_bullish'}
+    windows: {'main:offset0': {'trades': 42, 'avg_r': -0.121}, 'main:offset730': {'trades': 112, 'avg_r': -0.053}, 'main:offset1460': {'trades': 70, 'avg_r': -0.036}}
+    win_rate=37.9% breakeven=40.6%  avg_fee_r=+0.041  weekly_clusters=66 se_naive=0.0858 se_clustered=0.1193
+    orders: signals=286 filled=224 unfilled=62 (missed winners: price reached the target without touching the limit = 10) still_open_at_data_end=0
+    MISSING: AVG_R: -0.06 < +0.20; PROFIT_FACTOR: 0.9 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 28.5R > 20.0R; CONFIDENCE: lower bound -0.41R <= 0 (z=2.92 for 29 recipes tried, 66 weekly clusters)
+    WHY: WIN_RATE 38% is below breakeven 41% (needs +3 points); TIMEOUTS: 73/224 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 1.38R is too small against 1R risk
+
+--- bos_retest: close above a swing high (break of structure), enter on the retest of the broken level
+    parts: {'context': 'daily_bullish', 'trigger': 'break_of_structure_up', 'entry': 'retest_of_broken_level', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 80, 'avg_r': -0.253}, 'main:offset730': {'trades': 166, 'avg_r': -0.118}, 'main:offset1460': {'trades': 87, 'avg_r': -0.07}}
+    win_rate=33.0% breakeven=38.4%  avg_fee_r=+0.049  weekly_clusters=146 se_naive=0.0726 se_clustered=0.104
+    orders: signals=392 filled=333 unfilled=59 (missed winners: price reached the target without touching the limit = 5) still_open_at_data_end=0
+    MISSING: AVG_R: -0.14 < +0.20; PROFIT_FACTOR: 0.79 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 67.2R > 20.0R; CONFIDENCE: lower bound -0.44R <= 0 (z=2.92 for 29 recipes tried, 146 weekly clusters)
+    WHY: WIN_RATE 33% is below breakeven 38% (needs +5 points); TIMEOUTS: 80/333 trades went nowhere (the idea lacks momentum)
+
+--- sweep_fvg: sweep of a low, then enter at the midpoint of the FVG formed after it (current strategy)
+    parts: {'context': 'daily_bullish', 'trigger': 'sell_side_sweep', 'entry': 'fvg_midpoint', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 54, 'avg_r': -0.202}, 'main:offset730': {'trades': 81, 'avg_r': -0.292}, 'main:offset1460': {'trades': 53, 'avg_r': -0.283}}
+    win_rate=26.6% breakeven=35.3%  avg_fee_r=+0.071  weekly_clusters=101 se_naive=0.1045 se_clustered=0.109
+    orders: signals=274 filled=188 unfilled=86 (missed winners: price reached the target without touching the limit = 25) still_open_at_data_end=0
+    MISSING: AVG_R: -0.26 < +0.20; PROFIT_FACTOR: 0.66 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 54.6R > 20.0R; CONFIDENCE: lower bound -0.58R <= 0 (z=2.92 for 29 recipes tried, 101 weekly clusters)
+    WHY: WIN_RATE 27% is below breakeven 35% (needs +9 points)
+
+--- sweep_only: sweep of a low, enter at the current close (no FVG)
+    parts: {'context': 'daily_bullish', 'trigger': 'sell_side_sweep', 'entry': 'close', 'exit': 'first_swing_high_meeting_rr'}
+    windows: {'main:offset0': {'trades': 614, 'avg_r': -0.499}, 'main:offset730': {'trades': 897, 'avg_r': -0.615}, 'main:offset1460': {'trades': 555, 'avg_r': -0.238}}
+    win_rate=25.4% breakeven=38.2%  avg_fee_r=+0.292  weekly_clusters=196 se_naive=0.0535 se_clustered=0.0711
+    orders: signals=2067 filled=2066 unfilled=1 (missed winners: price reached the target without touching the limit = 0) still_open_at_data_end=0
+    MISSING: AVG_R: -0.48 < +0.20; PROFIT_FACTOR: 0.55 < 1.3; STABILITY: negative in 3 windows ['main:offset0', 'main:offset730', 'main:offset1460']; DRAWDOWN: 1016.0R > 20.0R; CONFIDENCE: lower bound -0.69R <= 0 (z=2.92 for 29 recipes tried, 196 weekly clusters)
+    WHY: WIN_RATE 25% is below breakeven 38% (needs +13 points); FAST_STOPS: 988/1541 losses hit the stop within 2 candles (entry or stop placement)
+
+skipped in main:offset1460 (fail-closed): SUIUSDT=1d:EMPTY_DATASET | first issue: No candles provided for SUIUSDT (1d).; ARBUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ARBUSDT (1d).; APTUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 27 for APTU; OPUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 167 for OPU; TAOUSDT=1d:EMPTY_DATASET | first issue: No candles provided for TAOUSDT (1d).; ENAUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ENAUSDT (1d).
+
+elapsed 486s

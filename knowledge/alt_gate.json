@@ -1,0 +1,201 @@
+{
+ "status": "DONE",
+ "run_at": "2026-11-14 09:29:06 UTC",
+ "as_of_ms": 1794643200000,
+ "frozen": [
+  "brk55_trail",
+  "brk20_btc_trail",
+  "pullback_ema20_trail"
+ ],
+ "verdicts": {
+  "brk55_trail": "FAIL",
+  "brk20_btc_trail": "FAIL",
+  "pullback_ema20_trail": "FAIL"
+ },
+ "portfolio_verdict": "FAIL",
+ "portfolio": {
+  "trades": 934,
+  "avg_r": -0.079,
+  "ci_lower_r": -0.263,
+  "ci_lower_naive_r": -0.203,
+  "n_clusters": 159,
+  "se_naive": 0.0427,
+  "se_clustered": 0.0632,
+  "avg_fee_r": 0.036,
+  "win_rate": 0.45610278372591007,
+  "breakeven_win_rate": 0.49502000535853613,
+  "profit_factor": 0.8554552770340533,
+  "max_drawdown_r": 93.35,
+  "windows": {
+   "alt:offset0": {
+    "trades": 265,
+    "avg_r": -0.008
+   },
+   "alt:offset1460": {
+    "trades": 298,
+    "avg_r": -0.095
+   },
+   "alt:offset730": {
+    "trades": 371,
+    "avg_r": -0.116
+   }
+  },
+  "negative_windows": [
+   "alt:offset0",
+   "alt:offset1460",
+   "alt:offset730"
+  ],
+  "meets_goal": false,
+  "unmet": [
+   "AVG_R: -0.08 < +0.20",
+   "PROFIT_FACTOR: 0.86 < 1.3",
+   "STABILITY: negative in 3 windows ['alt:offset0', 'alt:offset1460', 'alt:offset730']",
+   "DRAWDOWN: 93.4R > 20.0R",
+   "CONFIDENCE: lower bound -0.26R <= 0 (z=2.92 for 29 recipes tried, 159 weekly clusters)"
+  ],
+  "causes": [
+   "WIN_RATE 46% is below breakeven 50% (needs +4 points)",
+   "SMALL_WINS: average win 1.02R is too small against 1R risk"
+  ],
+  "criteria_met": 1
+ },
+ "alt_cards": {
+  "brk55_trail": {
+   "trades": 320,
+   "avg_r": -0.022,
+   "ci_lower_r": -0.275,
+   "ci_lower_naive_r": -0.24,
+   "n_clusters": 97,
+   "se_naive": 0.0746,
+   "se_clustered": 0.0864,
+   "avg_fee_r": 0.029,
+   "win_rate": 0.484375,
+   "breakeven_win_rate": 0.4954823847952254,
+   "profit_factor": 0.9565239947666772,
+   "max_drawdown_r": 37.24,
+   "windows": {
+    "alt:offset0": {
+     "trades": 93,
+     "avg_r": -0.0
+    },
+    "alt:offset730": {
+     "trades": 142,
+     "avg_r": -0.14
+    },
+    "alt:offset1460": {
+     "trades": 85,
+     "avg_r": 0.152
+    }
+   },
+   "negative_windows": [
+    "alt:offset0",
+    "alt:offset730"
+   ],
+   "meets_goal": false,
+   "unmet": [
+    "AVG_R: -0.02 < +0.20",
+    "PROFIT_FACTOR: 0.96 < 1.3",
+    "STABILITY: negative in 2 windows ['alt:offset0', 'alt:offset730']",
+    "DRAWDOWN: 37.2R > 20.0R",
+    "CONFIDENCE: lower bound -0.27R <= 0 (z=2.92 for 29 recipes tried, 97 weekly clusters)"
+   ],
+   "causes": [
+    "WIN_RATE 48% is below breakeven 50% (needs +1 points)",
+    "SMALL_WINS: average win 1.00R is too small against 1R risk"
+   ],
+   "criteria_met": 1
+  },
+  "brk20_btc_trail": {
+   "trades": 245,
+   "avg_r": -0.063,
+   "ci_lower_r": -0.332,
+   "ci_lower_naive_r": -0.312,
+   "n_clusters": 53,
+   "se_naive": 0.085,
+   "se_clustered": 0.0919,
+   "avg_fee_r": 0.031,
+   "win_rate": 0.47346938775510206,
+   "breakeven_win_rate": 0.5061574357894497,
+   "profit_factor": 0.8773465580006501,
+   "max_drawdown_r": 18.86,
+   "windows": {
+    "alt:offset0": {
+     "trades": 39,
+     "avg_r": -0.002
+    },
+    "alt:offset730": {
+     "trades": 146,
+     "avg_r": -0.05
+    },
+    "alt:offset1460": {
+     "trades": 60,
+     "avg_r": -0.136
+    }
+   },
+   "negative_windows": [
+    "alt:offset0",
+    "alt:offset730",
+    "alt:offset1460"
+   ],
+   "meets_goal": false,
+   "unmet": [
+    "AVG_R: -0.06 < +0.20",
+    "PROFIT_FACTOR: 0.88 < 1.3",
+    "STABILITY: negative in 3 windows ['alt:offset0', 'alt:offset730', 'alt:offset1460']",
+    "CONFIDENCE: lower bound -0.33R <= 0 (z=2.92 for 29 recipes tried, 53 weekly clusters)"
+   ],
+   "causes": [
+    "WIN_RATE 47% is below breakeven 51% (needs +3 points)",
+    "SMALL_WINS: average win 0.95R is too small against 1R risk"
+   ],
+   "criteria_met": 2
+  },
+  "pullback_ema20_trail": {
+   "trades": 770,
+   "avg_r": -0.119,
+   "ci_lower_r": -0.325,
+   "ci_lower_naive_r": -0.253,
+   "n_clusters": 150,
+   "se_naive": 0.0456,
+   "se_clustered": 0.0702,
+   "avg_fee_r": 0.038,
+   "win_rate": 0.43766233766233764,
+   "breakeven_win_rate": 0.49650738518947723,
+   "profit_factor": 0.7892405609144201,
+   "max_drawdown_r": 98.77,
+   "windows": {
+    "alt:offset0": {
+     "trades": 219,
+     "avg_r": -0.059
+    },
+    "alt:offset730": {
+     "trades": 307,
+     "avg_r": -0.152
+    },
+    "alt:offset1460": {
+     "trades": 244,
+     "avg_r": -0.131
+    }
+   },
+   "negative_windows": [
+    "alt:offset0",
+    "alt:offset730",
+    "alt:offset1460"
+   ],
+   "meets_goal": false,
+   "unmet": [
+    "AVG_R: -0.12 < +0.20",
+    "PROFIT_FACTOR: 0.79 < 1.3",
+    "STABILITY: negative in 3 windows ['alt:offset0', 'alt:offset730', 'alt:offset1460']",
+    "DRAWDOWN: 98.8R > 20.0R",
+    "CONFIDENCE: lower bound -0.32R <= 0 (z=2.92 for 29 recipes tried, 150 weekly clusters)"
+   ],
+   "causes": [
+    "WIN_RATE 44% is below breakeven 50% (needs +6 points)",
+    "SMALL_WINS: average win 1.02R is too small against 1R risk"
+   ],
+   "criteria_met": 1
+  }
+ },
+ "overall": "FAIL"
+}

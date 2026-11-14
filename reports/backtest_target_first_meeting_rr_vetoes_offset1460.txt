@@ -1,0 +1,74 @@
+BACKTEST  2026-11-14T02:42:40.849841+00:00  days=730  symbols_ok=19  skipped=6
+window: ends 1460 days before today  vetoes_enabled={'min_fvg_size_atr': 0.25, 'min_relative_volume': 0.8}
+data defects: truncated 4h candles tolerated=125  steps skipped near them=7791
+target_mode=first_meeting_rr  assumptions: fee=0.1%/side slippage_on_stop=0.05% max_hold=30 candles, stop wins ties, one position per symbol
+VERDICT: INSUFFICIENT_SAMPLE   (trades=16, required>=30)
+signals=24  filled=16  unfilled=8  fill_rate=0.667  unfilled_that_would_have_hit_target=3
+win_rate=18.8%  95%CI=[6.6%, 43.0%]  breakeven_win_rate=0.382
+avg_R=-0.533  total_R=-8.53  avg_win_R=1.70  avg_loss_R=1.05  profit_factor=0.37
+max_drawdown_R=11.39  max_consecutive_losses=8  avg_bars_held=8.1
+exit_reasons={'STOP': 13, 'TARGET': 2, 'TIMEOUT': 1}
+
+FUNNEL (analysed steps=7872; check: evaluated -> passed):
+  DAILY_TREND_BULLISH         7872 ->    7872  (100.0%)
+  RECENT_SELL_SIDE_SWEEP      7872 ->    2256  (28.7%)
+  ATR_AVAILABLE               7872 ->    7872  (100.0%)
+  OPEN_FVG_AFTER_SWEEP        2256 ->     222  (9.8%)
+  STOP_BELOW_ENTRY             222 ->     222  (100.0%)
+  PRICE_ABOVE_STOP             222 ->     222  (100.0%)
+  PRICE_NEAR_ENTRY             222 ->     176  (79.3%)
+  TARGET_AVAILABLE             222 ->     132  (59.5%)
+  VETO_FVG_TOO_SMALL           222 ->     102  (45.9%)
+  VETO_LOW_VOLUME              222 ->     126  (56.8%)
+  REWARD_TO_RISK_OK            132 ->     132  (100.0%)
+TRADES BY DAILY REGIME AT ENTRY (does the daily filter add value?):
+  daily_bullish=True   n= 16 win_rate=19% avg_R=-0.53
+  daily_bullish=False  n=  0
+
+POST-MORTEM (per-trade failure and success analysis):
+  losses=13  expected(rational risk)=13  unexpected(risk-estimate defect)=0  losses_with_avoidable_pattern=11  lucky_wins=0
+  categories: {'NORMAL_STOP': 13, 'NORMAL_WIN': 2, 'TIMEOUT_WIN': 1}
+  LESSONS (adopted only if confirmed out of the training sample):
+   - DEEP_SWEEP [NOT_CONFIRMED] deep sweep (>1%), may be a real breakdown | all trades: with n=9 avgR=-0.80 / without n=7 avgR=-0.19 | suggested change if confirmed: {'signals.max_sweep_penetration_pct': 1.0}
+   - THIN_RR [NOT_CONFIRMED] planned reward/risk below 2.5 (thin margin against fees) | all trades: with n=11 avgR=-0.30 / without n=5 avgR=-1.05 | suggested change if confirmed: {'strategy.minimum_reward_to_risk': 2.5}
+   - TIGHT_STOP [INSUFFICIENT_DATA] stop tighter than 1x ATR (normal market noise hits it) | all trades: with n=2 avgR=-1.04 / without n=14 avgR=-0.46 | suggested change if confirmed: {'signals.min_risk_atr': 1.0}
+  TOP LOSSES (unexpected first):
+   * ETHUSDT NORMAL_STOP R=-1.076 expected=yes flags=['THIN_RR', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * DOTUSDT NORMAL_STOP R=-1.052 expected=yes flags=['THIN_RR', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * DOGEUSDT NORMAL_STOP R=-1.045 expected=yes flags=['TIGHT_STOP', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down); nearly won: reached +1.9R then reversed (a trade-management lesson, not an entry lesson)
+   * ATOMUSDT NORMAL_STOP R=-1.04 expected=yes flags=['THIN_RR', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * LINKUSDT NORMAL_STOP R=-1.028 expected=yes flags=['THIN_RR', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * HBARUSDT NORMAL_STOP R=-1.026 expected=yes flags=['TIGHT_STOP', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * NEARUSDT NORMAL_STOP R=-1.023 expected=yes flags=['THIN_RR', 'DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * LINKUSDT NORMAL_STOP R=-1.068 expected=yes flags=['THIN_RR'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * TRXUSDT NORMAL_STOP R=-1.063 expected=yes flags=['THIN_RR'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * SOLUSDT NORMAL_STOP R=-1.048 expected=yes flags=['DEEP_SWEEP'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * INJUSDT NORMAL_STOP R=-1.036 expected=yes flags=['THIN_RR'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * XRPUSDT NORMAL_STOP R=-1.06 expected=yes flags=[] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+per symbol (trades, total_R, signals, steps_evaluated):
+  LINKUSDT   trades=  2 R=  -2.10 signals=  2 steps=4350 skipped_not_bullish=3299
+  SOLUSDT    trades=  2 R=  +0.10 signals=  4 steps=3716 skipped_not_bullish=2862
+  ADAUSDT    trades=  1 R=  -1.05 signals=  1 steps=4353 skipped_not_bullish=3266
+  ATOMUSDT   trades=  1 R=  -1.04 signals=  2 steps=4335 skipped_not_bullish=3180
+  BNBUSDT    trades=  1 R=  +1.95 signals=  1 steps=4364 skipped_not_bullish=3290
+  DOGEUSDT   trades=  1 R=  -1.05 signals=  1 steps=4366 skipped_not_bullish=3455
+  DOTUSDT    trades=  1 R=  -1.05 signals=  1 steps=3712 skipped_not_bullish=3169
+  ETHUSDT    trades=  1 R=  -1.08 signals=  1 steps=4359 skipped_not_bullish=3001
+  HBARUSDT   trades=  1 R=  -1.03 signals=  1 steps=4350 skipped_not_bullish=3285
+  INJUSDT    trades=  1 R=  -1.04 signals=  1 steps=3326 skipped_not_bullish=2868
+  LTCUSDT    trades=  1 R=  +1.99 signals=  2 steps=4355 skipped_not_bullish=3436
+  NEARUSDT   trades=  1 R=  -1.02 signals=  1 steps=3367 skipped_not_bullish=2863
+  TRXUSDT    trades=  1 R=  -1.06 signals=  4 steps=4345 skipped_not_bullish=3422
+  XRPUSDT    trades=  1 R=  -1.06 signals=  1 steps=4368 skipped_not_bullish=3531
+  AAVEUSDT   trades=  0 R=  +0.00 signals=  0 steps=3366 skipped_not_bullish=3027
+  AVAXUSDT   trades=  0 R=  +0.00 signals=  1 steps=3499 skipped_not_bullish=2745
+  BTCUSDT    trades=  0 R=  +0.00 signals=  0 steps=4368 skipped_not_bullish=3310
+  FILUSDT    trades=  0 R=  +0.00 signals=  0 steps=3366 skipped_not_bullish=2991
+  UNIUSDT    trades=  0 R=  +0.00 signals=  0 steps=3534 skipped_not_bullish=3136
+skipped symbols (fail-closed): SUIUSDT=1d:EMPTY_DATASET | first issue: No candles provided for SUIUSDT (1d).; ARBUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ARBUSDT (1d).; APTUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 27 for APTUSDT (1d) is below required minimum of 200.; OPUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 167 for OPUSDT (1d) is below required minimum of 200.; TAOUSDT=1d:EMPTY_DATASET | first issue: No candles provided for TAOUSDT (1d).; ENAUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ENAUSDT (1d).
+WARNINGS:
+  - only 16 trades (< 30): do not draw conclusions
+  - single historical period, parameters not tuned or validated out-of-sample: not proof of edge
+elapsed 91s
+
+(pattern memory not updated: experiments and veto runs are not independent evidence)

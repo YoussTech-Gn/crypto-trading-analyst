@@ -1,0 +1,10 @@
+PATTERN MEMORY (what past backtests taught us; advisory, never auto-tunes the strategy)
+windows recorded: ['offset0_days730', 'offset1460_days730', 'offset730_days730']
+  TIGHT_STOP  RECURRING_HAZARD  windows=3 hurt_in=3 pooled avgR with=-0.74 (n=34) / without=-0.16 (n=154)  | stop tighter than 1x ATR (normal market noise hits it)
+  THIN_RR     MIXED             windows=3 hurt_in=1 pooled avgR with=-0.28 (n=127) / without=-0.22 (n=61)  | planned reward/risk below 2.5 (thin margin against fees)
+  DEEP_SWEEP  MIXED             windows=3 hurt_in=1 pooled avgR with=-0.30 (n=63) / without=-0.24 (n=125)  | deep sweep (>1%), may be a real breakdown
+  TINY_FVG    MIXED             windows=3 hurt_in=2 pooled avgR with=-0.31 (n=117) / without=-0.18 (n=71)  | FVG smaller than 0.25x ATR (weak)
+  HOT_RSI     INSUFFICIENT      windows=0 hurt_in=0 pooled avgR with=+0.00 (n=0) / without=+0.00 (n=0)  | RSI high (>65) at entry
+  LOW_VOLUME  RECURRING_HAZARD  windows=3 hurt_in=3 pooled avgR with=-0.61 (n=87) / without=+0.03 (n=101)  | weak volume at entry (<0.8 of average)
+  outcome categories across windows: {'CLEAN_WIN': 23, 'NORMAL_STOP': 134, 'NORMAL_WIN': 13, 'TIMEOUT_LOSS': 4, 'TIMEOUT_WIN': 14}
+  promotion rule: RECURRING_HAZARD needs >= 3 independent windows, hurt in all of them. Becoming a veto still needs the user's approval.

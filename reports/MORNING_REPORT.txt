@@ -1,0 +1,70 @@
+MORNING REPORT  (AI Crypto Trading Analyst - paper only, public data only)
+written 2026-11-14 09:29:06 UTC   data anchor 2026-11-14 08:00 UTC
+
+STAGES
+  cache   DONE      50 symbols cached (529s)
+  lab     DONE      main basket done (487s)
+  freeze  DONE      frozen ['brk55_trail', 'brk20_btc_trail', 'pullback_ema20_trail'] (0s)
+  alt     DONE      alt verdicts {'brk55_trail': 'FAIL', 'brk20_btc_trail': 'FAIL', 'pullback_ema20_trail': 'FAIL'}, portfolio FAIL (124s)
+
+1) MAIN BASKET - 29 recipes, 29 tried so far (confidence bar is stricter with every recipe)
+   goal (provisional): avg R >= 0.20, PF >= 1.3, <= 1 negative window, DD <= 20R, >= 100 trades, CI lower bound > 0
+   rsi_dip_30             met=3/6 trades= 124 avgR=-0.013 ciLow=-0.446 PF=0.97 DD=18.91R neg_windows=1
+   brk55_trail            met=2/6 trades= 456 avgR=+0.067 ciLow=-0.122 PF=1.13 DD=21.71R neg_windows=1
+   brk20_btc_trail        met=2/6 trades= 366 avgR=+0.131 ciLow=-0.163 PF=1.26 DD=21.76R neg_windows=0
+   brk20_trail            met=2/6 trades= 682 avgR=+0.017 ciLow=-0.171 PF=1.03 DD=41.43R neg_windows=1
+   brk20_vol_trail        met=2/6 trades= 556 avgR=+0.010 ciLow=-0.201 PF=1.02 DD=56.04R neg_windows=1
+   combo_upper_vol        met=2/6 trades= 483 avgR=+0.045 ciLow=-0.233 PF=1.07 DD=60.02R neg_windows=1
+   combo_upper_btc        met=2/6 trades= 402 avgR=+0.082 ciLow=-0.267 PF=1.12 DD=51.76R neg_windows=1
+   fvg_btc                met=2/6 trades= 406 avgR=+0.014 ciLow=-0.31 PF=1.02 DD=54.14R neg_windows=1
+   combo_upper_2atr_vol   met=2/6 trades= 296 avgR=-0.000 ciLow=-0.317 PF=1.0 DD=42.39R neg_windows=1
+   pullback_ema20_trail   met=1/6 trades= 988 avgR=-0.015 ciLow=-0.178 PF=0.97 DD=55.06R neg_windows=3
+   fvg_entry_upper        met=1/6 trades= 828 avgR=-0.032 ciLow=-0.261 PF=0.95 DD=102.83R neg_windows=3
+   fvg_exit_1_5r          met=1/6 trades= 940 avgR=-0.118 ciLow=-0.276 PF=0.82 DD=147.05R neg_windows=3
+   rsi_dip_35             met=1/6 trades= 342 avgR=-0.036 ciLow=-0.277 PF=0.93 DD=40.72R neg_windows=2
+   fvg_exit_1r            met=1/6 trades=1005 avgR=-0.154 ciLow=-0.282 PF=0.74 DD=183.94R neg_windows=3
+   fvg_exit_partial       met=1/6 trades= 880 avgR=-0.154 ciLow=-0.302 PF=0.73 DD=164.73R neg_windows=3
+   combo_upper_2atr       met=1/6 trades= 486 avgR=-0.062 ciLow=-0.311 PF=0.89 DD=54.09R neg_windows=3
+   pullback_ema20         met=1/6 trades= 653 avgR=-0.071 ciLow=-0.32 PF=0.9 DD=95.92R neg_windows=2
+   fvg_stop_2atr          met=1/6 trades= 497 avgR=-0.087 ciLow=-0.321 PF=0.86 DD=64.22R neg_windows=3
+   fvg_exit_be            met=1/6 trades= 880 avgR=-0.153 ciLow=-0.325 PF=0.75 DD=171.33R neg_windows=3
+   fvg_volume             met=1/6 trades= 467 avgR=-0.042 ciLow=-0.34 PF=0.94 DD=64.56R neg_windows=2
+   fvg_entry_lower        met=1/6 trades= 846 avgR=-0.137 ciLow=-0.342 PF=0.83 DD=174.97R neg_windows=2
+   fvg_exit_time          met=1/6 trades= 848 avgR=-0.123 ciLow=-0.342 PF=0.84 DD=152.2R neg_windows=3
+   fvg_stop_half          met=1/6 trades=1178 avgR=-0.156 ciLow=-0.344 PF=0.81 DD=232.03R neg_windows=3
+   fvg_only               met=1/6 trades= 844 avgR=-0.123 ciLow=-0.347 PF=0.84 DD=154.18R neg_windows=3
+   fvg_stop_struct        met=1/6 trades= 594 avgR=-0.138 ciLow=-0.382 PF=0.8 DD=106.25R neg_windows=3
+   combo_upper_2atr_btc   met=1/6 trades= 224 avgR=-0.061 ciLow=-0.41 PF=0.9 DD=28.54R neg_windows=3
+   bos_retest             met=1/6 trades= 333 avgR=-0.138 ciLow=-0.442 PF=0.79 DD=67.18R neg_windows=3
+   sweep_fvg              met=1/6 trades= 188 avgR=-0.264 ciLow=-0.583 PF=0.66 DD=54.61R neg_windows=3
+   sweep_only             met=1/6 trades=2066 avgR=-0.479 ciLow=-0.687 PF=0.55 DD=1015.99R neg_windows=3
+   recipes meeting the full goal: NONE
+
+   closest to the goal: rsi_dip_30
+   missing: AVG_R: -0.01 < +0.20; PROFIT_FACTOR: 0.97 < 1.3; CONFIDENCE: lower bound -0.45R <= 0 (z=2.92 for 29 recipes tried, 51 weekly clusters)
+   why: WIN_RATE 49% is below breakeven 50% (needs +1 points); TIMEOUTS: 58/124 trades went nowhere (the idea lacks momentum); SMALL_WINS: average win 0.96R is too small against 1R risk
+
+   best avg R per family (which source of edge looks most promising):
+     breakout  best +0.131   mean of family +0.056   (4 recipes)
+     fvg       best +0.082   mean of family -0.078   (18 recipes)
+     rsi       best -0.013   mean of family -0.024   (2 recipes)
+     pullback  best -0.015   mean of family -0.043   (2 recipes)
+     smc       best -0.138   mean of family -0.294   (3 recipes)
+
+2) FROZEN (pre-registered rule: top 3 by clustered lower bound, >= 100 trades, max 2 per family): ['brk55_trail', 'brk20_btc_trail', 'pullback_ema20_trail']
+   brk55_trail            met=2/6 trades= 456 avgR=+0.067 ciLow=-0.122 PF=1.13 DD=21.71R neg_windows=1
+   brk20_btc_trail        met=2/6 trades= 366 avgR=+0.131 ciLow=-0.163 PF=1.26 DD=21.76R neg_windows=0
+   pullback_ema20_trail   met=1/6 trades= 988 avgR=-0.015 ciLow=-0.178 PF=0.97 DD=55.06R neg_windows=3
+   PORTFOLIO(frozen)      met=2/6 trades=1186 avgR=-0.000 ciLow=-0.148 PF=1.0 DD=66.03R neg_windows=1   overlap={'setups_union': 1575, 'setups_per_recipe': {'brk55_trail': 446, 'brk20_btc_trail': 354, 'pullback_ema20_trail': 984}, 'setups_in_more_than_one': 199}
+
+3) ALT GATE (25 symbols the recipes never saw; same dates, same market beta) -> OVERALL: FAIL
+   rule: PASS needs >= 100 trades, avg R >= 0.1, PF >= 1.15, <= 1 negative window, main avg R > 0
+   FAIL        brk55_trail            met=1/6 trades= 320 avgR=-0.022 ciLow=-0.275 PF=0.96 DD=37.24R neg_windows=2
+   FAIL        brk20_btc_trail        met=2/6 trades= 245 avgR=-0.063 ciLow=-0.332 PF=0.88 DD=18.86R neg_windows=3
+   FAIL        pullback_ema20_trail   met=1/6 trades= 770 avgR=-0.119 ciLow=-0.325 PF=0.79 DD=98.77R neg_windows=3
+   FAIL        PORTFOLIO(frozen)      met=1/6 trades= 934 avgR=-0.079 ciLow=-0.263 PF=0.86 DD=93.35R neg_windows=3
+   PASS is NOT proof of an edge: it only earns forward paper trading. FAIL closes that idea for now.
+
+FILES: reports/lab_main.txt (every recipe in detail), reports/lab_alt.txt, knowledge/frozen_candidates.json, knowledge/alt_gate.json,
+       reports/overnight.log, reports/failure_overnight_*.txt (only if a stage failed), docs/DECISIONS.md (ADR-028).
+NEXT: read this file, then choose between (a) forward paper trading of the PASS/WEAK candidate, (b) a new component family.

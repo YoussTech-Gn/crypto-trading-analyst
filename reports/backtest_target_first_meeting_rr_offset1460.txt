@@ -1,0 +1,82 @@
+BACKTEST  2026-11-14T02:41:09.380775+00:00  days=730  symbols_ok=19  skipped=6
+window: ends 1460 days before today  vetoes_enabled=none
+data defects: truncated 4h candles tolerated=125  steps skipped near them=7791
+target_mode=first_meeting_rr  assumptions: fee=0.1%/side slippage_on_stop=0.05% max_hold=30 candles, stop wins ties, one position per symbol
+VERDICT: NEGATIVE   (trades=53, required>=30)
+signals=73  filled=53  unfilled=20  fill_rate=0.726  unfilled_that_would_have_hit_target=8
+win_rate=24.5%  95%CI=[14.9%, 37.6%]  breakeven_win_rate=0.337
+avg_R=-0.283  total_R=-15.02  avg_win_R=2.05  avg_loss_R=1.04  profit_factor=0.64
+max_drawdown_R=21.61  max_consecutive_losses=12  avg_bars_held=9.2
+exit_reasons={'STOP': 39, 'TARGET': 11, 'TIMEOUT': 3}
+
+FUNNEL (analysed steps=7521; check: evaluated -> passed):
+  DAILY_TREND_BULLISH         7521 ->    7521  (100.0%)
+  RECENT_SELL_SIDE_SWEEP      7521 ->    2147  (28.5%)
+  ATR_AVAILABLE               7521 ->    7521  (100.0%)
+  OPEN_FVG_AFTER_SWEEP        2147 ->     169  (7.9%)
+  STOP_BELOW_ENTRY             169 ->     169  (100.0%)
+  PRICE_ABOVE_STOP             169 ->     169  (100.0%)
+  PRICE_NEAR_ENTRY             169 ->     135  (79.9%)
+  TARGET_AVAILABLE             169 ->      86  (50.9%)
+  REWARD_TO_RISK_OK             86 ->      86  (100.0%)
+TRADES BY DAILY REGIME AT ENTRY (does the daily filter add value?):
+  daily_bullish=True   n= 53 win_rate=25% avg_R=-0.28
+  daily_bullish=False  n=  0
+
+POST-MORTEM (per-trade failure and success analysis):
+  losses=40  expected(rational risk)=40  unexpected(risk-estimate defect)=0  losses_with_avoidable_pattern=38  lucky_wins=0
+  categories: {'NORMAL_STOP': 39, 'NORMAL_WIN': 3, 'TIMEOUT_LOSS': 1, 'CLEAN_WIN': 8, 'TIMEOUT_WIN': 2}
+  LESSONS (adopted only if confirmed out of the training sample):
+   - DEEP_SWEEP [NOT_CONFIRMED] deep sweep (>1%), may be a real breakdown | all trades: with n=24 avgR=-0.40 / without n=29 avgR=-0.19 | suggested change if confirmed: {'signals.max_sweep_penetration_pct': 1.0}
+   - LOW_VOLUME [NOT_CONFIRMED] weak volume at entry (<0.8 of average) | all trades: with n=27 avgR=-0.76 / without n=26 avgR=+0.22 | suggested change if confirmed: {'signals.min_relative_volume': 0.8}
+   - THIN_RR [NOT_CONFIRMED] planned reward/risk below 2.5 (thin margin against fees) | all trades: with n=38 avgR=-0.29 / without n=15 avgR=-0.27 | suggested change if confirmed: {'strategy.minimum_reward_to_risk': 2.5}
+   - TIGHT_STOP [NOT_CONFIRMED] stop tighter than 1x ATR (normal market noise hits it) | all trades: with n=10 avgR=-0.49 / without n=43 avgR=-0.24 | suggested change if confirmed: {'signals.min_risk_atr': 1.0}
+   - TINY_FVG [NOT_CONFIRMED] FVG smaller than 0.25x ATR (weak) | all trades: with n=30 avgR=+0.03 / without n=23 avgR=-0.70 | suggested change if confirmed: {'signals.min_fvg_size_atr': 0.25}
+  TOP LOSSES (unexpected first):
+   * INJUSDT NORMAL_STOP R=-1.301 expected=yes flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * BNBUSDT NORMAL_STOP R=-1.102 expected=yes flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * ADAUSDT NORMAL_STOP R=-1.087 expected=yes flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * LINKUSDT NORMAL_STOP R=-1.061 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * LTCUSDT NORMAL_STOP R=-1.052 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * ATOMUSDT NORMAL_STOP R=-1.049 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * BNBUSDT NORMAL_STOP R=-1.045 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * BTCUSDT NORMAL_STOP R=-1.043 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk
+   * TRXUSDT TIMEOUT_LOSS R=-0.127 expected=yes flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | neither stop nor target reached within the hold limit, exited at a loss: the idea did not move (acceptable risk)
+   * BTCUSDT NORMAL_STOP R=-1.231 expected=yes flags=['TIGHT_STOP', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * BNBUSDT NORMAL_STOP R=-1.098 expected=yes flags=['TIGHT_STOP', 'THIN_RR', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk | fast failure: stop hit within two candles of entry (the sweep was probably a continuation down)
+   * BTCUSDT NORMAL_STOP R=-1.094 expected=yes flags=['THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | stop hit within the planned risk (about 1R): expected, rational risk
+per symbol (trades, total_R, signals, steps_evaluated):
+  ETHUSDT    trades=  5 R=  +4.97 signals=  6 steps=4299 skipped_not_bullish=3001
+  TRXUSDT    trades=  5 R=  -4.33 signals= 10 steps=4269 skipped_not_bullish=3406
+  ATOMUSDT   trades=  4 R=  -4.18 signals=  7 steps=4294 skipped_not_bullish=3162
+  BNBUSDT    trades=  4 R=  -1.30 signals=  5 steps=4352 skipped_not_bullish=3288
+  BTCUSDT    trades=  4 R=  -4.44 signals=  4 steps=4323 skipped_not_bullish=3293
+  LINKUSDT   trades=  4 R=  -4.23 signals=  4 steps=4335 skipped_not_bullish=3299
+  LTCUSDT    trades=  4 R=  +3.43 signals=  5 steps=4314 skipped_not_bullish=3420
+  HBARUSDT   trades=  3 R=  -3.13 signals=  6 steps=4323 skipped_not_bullish=3285
+  INJUSDT    trades=  3 R=  -0.35 signals=  6 steps=3301 skipped_not_bullish=2860
+  SOLUSDT    trades=  3 R=  -0.98 signals=  5 steps=3705 skipped_not_bullish=2862
+  AAVEUSDT   trades=  2 R=  -2.09 signals=  2 steps=3349 skipped_not_bullish=3022
+  ADAUSDT    trades=  2 R=  -2.14 signals=  2 steps=4353 skipped_not_bullish=3266
+  DOGEUSDT   trades=  2 R=  +1.49 signals=  2 steps=4348 skipped_not_bullish=3452
+  DOTUSDT    trades=  2 R=  +1.02 signals=  2 steps=3706 skipped_not_bullish=3169
+  NEARUSDT   trades=  2 R=  +1.11 signals=  2 steps=3350 skipped_not_bullish=2853
+  XRPUSDT    trades=  2 R=  -2.12 signals=  2 steps=4361 skipped_not_bullish=3531
+  FILUSDT    trades=  1 R=  +3.29 signals=  1 steps=3343 skipped_not_bullish=2991
+  UNIUSDT    trades=  1 R=  -1.05 signals=  1 steps=3514 skipped_not_bullish=3121
+  AVAXUSDT   trades=  0 R=  +0.00 signals=  1 steps=3499 skipped_not_bullish=2745
+skipped symbols (fail-closed): SUIUSDT=1d:EMPTY_DATASET | first issue: No candles provided for SUIUSDT (1d).; ARBUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ARBUSDT (1d).; APTUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 27 for APTUSDT (1d) is below required minimum of 200.; OPUSDT=1d:INSUFFICIENT_HISTORY | first issue: Closed candle count 167 for OPUSDT (1d) is below required minimum of 200.; TAOUSDT=1d:EMPTY_DATASET | first issue: No candles provided for TAOUSDT (1d).; ENAUSDT=1d:EMPTY_DATASET | first issue: No candles provided for ENAUSDT (1d).
+WARNINGS:
+  - single historical period, parameters not tuned or validated out-of-sample: not proof of edge
+elapsed 81s
+
+PATTERN MEMORY (what past backtests taught us; advisory, never auto-tunes the strategy)
+windows recorded: ['offset0_days730', 'offset1460_days730', 'offset730_days730']
+  TIGHT_STOP  RECURRING_HAZARD  windows=3 hurt_in=3 pooled avgR with=-0.74 (n=34) / without=-0.16 (n=154)  | stop tighter than 1x ATR (normal market noise hits it)
+  THIN_RR     MIXED             windows=3 hurt_in=1 pooled avgR with=-0.28 (n=127) / without=-0.22 (n=61)  | planned reward/risk below 2.5 (thin margin against fees)
+  DEEP_SWEEP  MIXED             windows=3 hurt_in=1 pooled avgR with=-0.30 (n=63) / without=-0.24 (n=125)  | deep sweep (>1%), may be a real breakdown
+  TINY_FVG    MIXED             windows=3 hurt_in=2 pooled avgR with=-0.31 (n=117) / without=-0.18 (n=71)  | FVG smaller than 0.25x ATR (weak)
+  HOT_RSI     INSUFFICIENT      windows=0 hurt_in=0 pooled avgR with=+0.00 (n=0) / without=+0.00 (n=0)  | RSI high (>65) at entry
+  LOW_VOLUME  RECURRING_HAZARD  windows=3 hurt_in=3 pooled avgR with=-0.61 (n=87) / without=+0.03 (n=101)  | weak volume at entry (<0.8 of average)
+  outcome categories across windows: {'CLEAN_WIN': 23, 'NORMAL_STOP': 134, 'NORMAL_WIN': 13, 'TIMEOUT_LOSS': 4, 'TIMEOUT_WIN': 14}
+  promotion rule: RECURRING_HAZARD needs >= 3 independent windows, hurt in all of them. Becoming a veto still needs the user's approval.

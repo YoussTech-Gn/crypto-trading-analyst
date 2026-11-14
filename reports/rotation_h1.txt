@@ -1,0 +1,27 @@
+H1 ROTATION STUDY (ADR-032, pre-registered)  2020-07-01 .. 2026-11-13  symbols=25 missing=[]
+params: RotationParams(top_k=3, lookback=28, min_history=60, ema_gate=50, fee=0.001, slippage=0.0005, hold_days=7)
+Bias: the cache holds only coins still listed in Nov 2026 (survivorship) -> any positive result is an UPPER BOUND.
+
+day   H1 CAGR  H1 Shp  H1 DD |  B CAGR  B Shp   B DD | excess/wk   95% CI (block bootstrap) | excess 2x cost in mkt turn/wk
+Mon   +127.7%    1.45  60.1% |  +38.7%   0.97  42.1% |   +0.0126 [   +0.0024,    +0.0234] |        +0.0122    55%    0.60
+Tue   +143.8%    1.42  59.6% |  +40.2%   0.95  56.2% |   +0.0144 [   +0.0027,    +0.0274] |        +0.0140    56%    0.58
+Wed   +124.8%    1.34  66.3% |  +40.9%   0.98  62.4% |   +0.0127 [   +0.0014,    +0.0256] |        +0.0123    56%    0.61
+Thu   +111.7%    1.23  57.1% |  +38.1%   0.96  52.9% |   +0.0122 [   +0.0013,    +0.0254] |        +0.0118    55%    0.58
+Fri   +118.8%    1.40  50.9% |  +36.8%   0.93  46.6% |   +0.0117 [   +0.0015,    +0.0237] |        +0.0113    52%    0.54
+Sat   +122.9%    1.43  49.3% |  +39.4%   0.97  45.2% |   +0.0117 [   +0.0010,    +0.0245] |        +0.0113    52%    0.55
+Sun    +87.7%    1.26  57.5% |  +29.2%   0.81  56.8% |   +0.0094 [   +0.0000,    +0.0199] |        +0.0090    53%    0.56
+
+ROBUSTNESS (ADR-032 addendum; Monday, same parameters)
+  R1 main without 2021: weeks=279 excess/wk +0.0045 CI [-0.0030, +0.0127] -> FAIL
+  R2 alt basket (25 symbols): H1 CAGR +92.7% Sharpe 0.97 DD 66.2% | bench Sharpe 0.97 | excess/wk +0.0138 CI [-0.0020, +0.0343] 2x-cost +0.0134 -> FAIL: lower bound -0.0020 <= 0
+     by year: 2020 -0.0141, 2021 +0.0796, 2022 -0.0020, 2023 -0.0004, 2024 +0.0051, 2025 +0.0087, 2026 +0.0045
+  R3 main+alt (50 symbols): H1 CAGR +170.1% Sharpe 1.29 DD 62.9% | bench Sharpe 0.97 | excess/wk +0.0191 CI [+0.0050, +0.0359] 2x-cost +0.0186 -> ok
+     by year: 2020 -0.0077, 2021 +0.0786, 2022 +0.0009, 2023 +0.0191, 2024 +0.0008, 2025 +0.0127, 2026 +0.0155
+
+Context, BTC buy and hold (Mon): CAGR +39.4% Sharpe 0.87 maxDD 75.2%
+Monday weekly excess by year: 2020 -0.0069 (26w), 2021 +0.0562 (52w), 2022 +0.0000 (52w), 2023 +0.0194 (52w), 2024 +0.0027 (53w), 2025 +0.0042 (52w), 2026 +0.0011 (44w)
+Most held (Monday, weeks): BTCUSDT 53, TRXUSDT 45, SOLUSDT 45, ETHUSDT 41, BNBUSDT 36, INJUSDT 33, XRPUSDT 26, ADAUSDT 25, AVAXUSDT 23, AAVEUSDT 23
+
+VERDICT: REJECTED
+  KILL R1 without 2021 the lower bound -0.0030 <= 0
+  KILL R2 alt basket: lower bound -0.0020 <= 0

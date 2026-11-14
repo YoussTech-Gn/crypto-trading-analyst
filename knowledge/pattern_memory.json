@@ -1,0 +1,185 @@
+{
+ "version": 1,
+ "windows": {
+  "offset0_days730": {
+   "runs": {
+    "first_meeting_rr": {
+     "avg_r": -0.20164316854725164,
+     "categories": {
+      "CLEAN_WIN": 5,
+      "NORMAL_STOP": 37,
+      "NORMAL_WIN": 5,
+      "TIMEOUT_LOSS": 1,
+      "TIMEOUT_WIN": 6
+     },
+     "flags": {
+      "DEEP_SWEEP": {
+       "avg_r_with": -0.12333725520464853,
+       "avg_r_without": -0.23461407942834772,
+       "n_with": 16,
+       "n_without": 38
+      },
+      "LOW_VOLUME": {
+       "avg_r_with": -0.6297597137533144,
+       "avg_r_without": 0.19589362342980673,
+       "n_with": 26,
+       "n_without": 28
+      },
+      "THIN_RR": {
+       "avg_r_with": -0.2808910129150451,
+       "avg_r_without": -0.07711084168357621,
+       "n_with": 33,
+       "n_without": 21
+      },
+      "TIGHT_STOP": {
+       "avg_r_with": -0.7312482834022442,
+       "avg_r_without": -0.09572214557625311,
+       "n_with": 9,
+       "n_without": 45
+      },
+      "TINY_FVG": {
+       "avg_r_with": -0.4972950861742384,
+       "avg_r_without": 0.2629527020094418,
+       "n_with": 33,
+       "n_without": 21
+      }
+     },
+     "n_trades": 54
+    },
+    "nearest": {
+     "avg_r": -1.1599506136460205,
+     "categories": {
+      "NORMAL_STOP": 4
+     },
+     "flags": {
+      "LOW_VOLUME": {
+       "avg_r_with": -1.0469087756201803,
+       "avg_r_without": -1.2729924516718607,
+       "n_with": 2,
+       "n_without": 2
+      },
+      "THIN_RR": {
+       "avg_r_with": -1.1063667171620004,
+       "avg_r_without": -1.1778119124740272,
+       "n_with": 1,
+       "n_without": 3
+      },
+      "TIGHT_STOP": {
+       "avg_r_with": -1.1063667171620004,
+       "avg_r_without": -1.1778119124740272,
+       "n_with": 1,
+       "n_without": 3
+      },
+      "TINY_FVG": {
+       "avg_r_with": -1.0835985436347593,
+       "avg_r_without": -1.2363026836572815,
+       "n_with": 2,
+       "n_without": 2
+      }
+     },
+     "n_trades": 4
+    }
+   }
+  },
+  "offset1460_days730": {
+   "runs": {
+    "first_meeting_rr": {
+     "avg_r": -0.28344028148175915,
+     "categories": {
+      "CLEAN_WIN": 8,
+      "NORMAL_STOP": 39,
+      "NORMAL_WIN": 3,
+      "TIMEOUT_LOSS": 1,
+      "TIMEOUT_WIN": 2
+     },
+     "flags": {
+      "DEEP_SWEEP": {
+       "avg_r_with": -0.40013037686157454,
+       "avg_r_without": -0.1868691680639809,
+       "n_with": 24,
+       "n_without": 29
+      },
+      "LOW_VOLUME": {
+       "avg_r_with": -0.7634227577195875,
+       "avg_r_without": 0.21500305922675486,
+       "n_with": 27,
+       "n_without": 26
+      },
+      "THIN_RR": {
+       "avg_r_with": -0.2873850855831801,
+       "avg_r_without": -0.27344677775815945,
+       "n_with": 38,
+       "n_without": 15
+      },
+      "TIGHT_STOP": {
+       "avg_r_with": -0.4909909793286686,
+       "avg_r_without": -0.23517267733131514,
+       "n_with": 10,
+       "n_without": 43
+      },
+      "TINY_FVG": {
+       "avg_r_with": 0.03210023763942818,
+       "avg_r_without": -0.6950148716398296,
+       "n_with": 30,
+       "n_without": 23
+      }
+     },
+     "n_trades": 53
+    }
+   }
+  },
+  "offset730_days730": {
+   "runs": {
+    "first_meeting_rr": {
+     "avg_r": -0.29221575246052733,
+     "categories": {
+      "CLEAN_WIN": 10,
+      "NORMAL_STOP": 58,
+      "NORMAL_WIN": 5,
+      "TIMEOUT_LOSS": 2,
+      "TIMEOUT_WIN": 6
+     },
+     "flags": {
+      "DEEP_SWEEP": {
+       "avg_r_with": -0.3212012353697265,
+       "avg_r_without": -0.28072150923791384,
+       "n_with": 23,
+       "n_without": 58
+      },
+      "HOT_RSI": {
+       "avg_r_with": 1.707005313477545,
+       "avg_r_without": -0.34282894400326336,
+       "n_with": 2,
+       "n_without": 79
+      },
+      "LOW_VOLUME": {
+       "avg_r_with": -0.47152592178355307,
+       "avg_r_without": -0.16250201295025338,
+       "n_with": 34,
+       "n_without": 47
+      },
+      "THIN_RR": {
+       "avg_r_with": -0.2819722688246045,
+       "avg_r_without": -0.3151611558049945,
+       "n_with": 56,
+       "n_without": 25
+      },
+      "TIGHT_STOP": {
+       "avg_r_with": -0.9212286772151947,
+       "avg_r_without": -0.1492582695617393,
+       "n_with": 15,
+       "n_without": 66
+      },
+      "TINY_FVG": {
+       "avg_r_with": -0.395020567277414,
+       "avg_r_without": -0.08660612282675384,
+       "n_with": 54,
+       "n_without": 27
+      }
+     },
+     "n_trades": 81
+    }
+   }
+  }
+ }
+}

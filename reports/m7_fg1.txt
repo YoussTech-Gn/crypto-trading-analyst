@@ -1,0 +1,36 @@
+M7-FG1 LEARNING ENGINE (ADR-034, pre-registered)  out-of-sample 2021-12 .. anchor
+label: long at open[t+1], +2.0 ATR target / -1.5 ATR stop, 30 candles, stop wins ties, after fees and slippage
+
+dataset rows=643754 (main 305344, alt 338410), symbols=50, built in 8s
+folds=21, out-of-sample rows=518252, leakage boundary checks all passed=True
+shuffled-label control AUC (main) = 0.4830  (must be 0.50 +/- 0.01)
+
+== MAIN: 250153 rows, base win rate 0.408, base avg R -0.123
+   AUC logistic 0.5129 | control [btc_d_bull, atr_pct] 0.4874 | frequency table 0.4983
+   AUC minus control +0.0255, week-bootstrap 95% [+0.0048, +0.0427]
+   diagnostics (cannot change the verdict): AUC on +1.5/-1.0 label 0.5151; on beta-stripped label 0.5159
+   top decile: predicted 0.501 vs realised 0.457 (calibration error 0.044)
+   top-decile trades (1 position/symbol): 3353 trades, avg R -0.066, week-clustered 95% [-0.143, +0.011], 246 weeks
+   by era: 2021-12..2022 -0.171 (567 trades), 2023..2024 +0.038 (1369 trades), 2025..2026 -0.124 (1417 trades)
+
+== ALT (never trained on): 268099 rows, base win rate 0.399, base avg R -0.134
+   AUC logistic 0.5154 | control [btc_d_bull, atr_pct] 0.4890 | frequency table 0.4995
+   AUC minus control +0.0263, week-bootstrap 95% [+0.0043, +0.0449]
+   diagnostics (cannot change the verdict): AUC on +1.5/-1.0 label 0.5134; on beta-stripped label 0.5138
+   top decile: predicted 0.503 vs realised 0.452 (calibration error 0.051)
+   top-decile trades (1 position/symbol): 3660 trades, avg R -0.048, week-clustered 95% [-0.126, +0.031], 250 weeks
+   by era: 2021-12..2022 -0.059 (705 trades), 2023..2024 -0.026 (1522 trades), 2025..2026 -0.066 (1433 trades)
+
+most influential features (top 3 by |coefficient| per fold, count of folds): dist_ema50_atr 21, dist_ema20_atr 21, rel_d_roc20 6, atr_pct_rank200 6, dist_low20_atr 3, btc_d_bull 2, dist_high20_atr 2, rsi14 1
+
+VERDICT: REJECTED
+  KILL LEAKAGE: shuffled-label AUC 0.4830 outside 0.50 +/- 0.01
+  KILL (1) MAIN AUC 0.5129 < 0.53
+  KILL (2) MAIN top-decile trades lower bound -0.143 <= 0
+  KILL (3) MAIN top-decile avg R negative in >= 2 eras
+  KILL (1) ALT AUC 0.5154 < 0.53
+  KILL (2) ALT top-decile trades lower bound -0.126 <= 0
+  KILL (3) ALT top-decile avg R negative in >= 2 eras
+  KILL (4) ALT calibration error 0.051 > 0.05
+
+elapsed 143s

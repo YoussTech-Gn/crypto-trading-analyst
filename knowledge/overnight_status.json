@@ -1,0 +1,27 @@
+{
+ "cache": {
+  "state": "DONE",
+  "note": "50 symbols cached (529s)",
+  "at": "2026-11-14 09:18:54 UTC"
+ },
+ "lab": {
+  "state": "DONE",
+  "note": "main basket done (487s)",
+  "at": "2026-11-14 09:27:01 UTC"
+ },
+ "freeze": {
+  "state": "DONE",
+  "note": "frozen ['brk55_trail', 'brk20_btc_trail', 'pullback_ema20_trail'] (0s)",
+  "at": "2026-11-14 09:27:02 UTC"
+ },
+ "alt": {
+  "state": "DONE",
+  "note": "alt verdicts {'brk55_trail': 'FAIL', 'brk20_btc_trail': 'FAIL', 'pullback_ema20_trail': 'FAIL'}, portfolio FAIL (124s)",
+  "at": "2026-11-14 09:29:06 UTC"
+ },
+ "report": {
+  "state": "DONE",
+  "note": "MORNING_REPORT.txt written (0s)",
+  "at": "2026-11-14 09:29:06 UTC"
+ }
+}

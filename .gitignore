@@ -1,0 +1,61 @@
+
+# Databases & Local Artifacts
+# Node / Next.js
+# Python
+# Repository & Environment
+*$py.class
+*.db
+*.egg
+*.egg-info/
+*.py[cod]
+*.so
+*.sqlite
+*.sqlite3
+*.tsbuildinfo
+.Python
+.coverage
+.eggs/
+.env
+.env.*.local
+.env.local
+.installed.cfg
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+apps/web/.next/
+apps/web/build/
+apps/web/out/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+htmlcov/
+lib/
+lib64/
+next-env.d.ts
+node_modules/
+paper.db
+parts/
+postgres_data/
+reports/*.json
+reports/collab_last_*.txt
+reports/*.log
+sdist/
+var/
+venv/
+wheels/
+
+# Local candle cache (public data, re-creatable)
+data/cache/
+
+# Private: the owner's live paper decisions, mood and notes (never public)
+knowledge/forward_journal.jsonl
+knowledge/forward_journal.tmp
+knowledge/forward_scan_state.json
+knowledge/forward_scan_state.tmp
+# Scratch
+_to_delete/
+.claude/settings.local.json

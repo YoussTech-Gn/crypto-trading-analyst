@@ -1,0 +1,74 @@
+BACKTEST  2026-11-14T01:46:10.395976+00:00  days=730  symbols_ok=25  skipped=0
+target_mode=first_meeting_rr  assumptions: fee=0.1%/side slippage_on_stop=0.05% max_hold=30 candles, stop wins ties, one position per symbol
+VERDICT: NEGATIVE   (trades=54, required>=30)
+signals=77  filled=54  unfilled=23  fill_rate=0.701  unfilled_that_would_have_hit_target=6
+win_rate=29.6%  95%CI=[19.1%, 42.8%]  breakeven_win_rate=0.364
+avg_R=-0.202  total_R=-10.89  avg_win_R=1.90  avg_loss_R=1.09  profit_factor=0.74
+max_drawdown_R=17.52  max_consecutive_losses=10  avg_bars_held=9.9
+exit_reasons={'STOP': 37, 'TARGET': 10, 'TIMEOUT': 7}
+
+FUNNEL (analysed steps=7926; check: evaluated -> passed):
+  DAILY_TREND_BULLISH         7926 ->    7926  (100.0%)
+  RECENT_SELL_SIDE_SWEEP      7926 ->    2254  (28.4%)
+  ATR_AVAILABLE               7926 ->    7926  (100.0%)
+  OPEN_FVG_AFTER_SWEEP        2254 ->     178  (7.9%)
+  STOP_BELOW_ENTRY             178 ->     178  (100.0%)
+  PRICE_ABOVE_STOP             178 ->     178  (100.0%)
+  PRICE_NEAR_ENTRY             178 ->     131  (73.6%)
+  TARGET_AVAILABLE             178 ->      98  (55.1%)
+  REWARD_TO_RISK_OK             98 ->      98  (100.0%)
+TRADES BY DAILY REGIME AT ENTRY (does the daily filter add value?):
+  daily_bullish=True   n= 54 win_rate=30% avg_R=-0.20
+  daily_bullish=False  n=  0
+
+POST-MORTEM (تقرير الفشل والنجاح لكل صفقة):
+  الخسائر=38  متوقعة(مخاطرة عقلانية)=38  غير متوقعة(خلل في تقدير المخاطرة)=0  خسائر بها نمط يمكن تفاديه=35  أرباح بالحظ=0
+  التصنيفات: {'CLEAN_WIN': 5, 'NORMAL_WIN': 5, 'NORMAL_STOP': 37, 'TIMEOUT_WIN': 6, 'TIMEOUT_LOSS': 1}
+  الدروس (تُعتمد فقط إذا تأكدت خارج عينة التدريب):
+   - LOW_VOLUME [CONFIRMED_OUT_OF_SAMPLE] حجم التداول ضعيف عند الدخول (<0.8 من المتوسط) | كل الصفقات: with n=26 avgR=-0.63 / without n=28 avgR=+0.20 | الاقتراح إن تأكد: {'signals.min_relative_volume': 0.8}
+   - TINY_FVG [CONFIRMED_OUT_OF_SAMPLE] الفجوة أصغر من 0.25×ATR (ضعيفة) | كل الصفقات: with n=33 avgR=-0.50 / without n=21 avgR=+0.26 | الاقتراح إن تأكد: {'signals.min_fvg_size_atr': 0.25}
+   - DEEP_SWEEP [NOT_CONFIRMED] الكنس عميق (>1%) وقد يكون كسراً حقيقياً | كل الصفقات: with n=16 avgR=-0.12 / without n=38 avgR=-0.23 | الاقتراح إن تأكد: {'signals.max_sweep_penetration_pct': 1.0}
+   - THIN_RR [NOT_CONFIRMED] العائد/المخاطرة المخطط أقل من 2.5 (هامش ضعيف أمام الرسوم) | كل الصفقات: with n=33 avgR=-0.28 / without n=21 avgR=-0.08 | الاقتراح إن تأكد: {'strategy.minimum_reward_to_risk': 2.5}
+   - TIGHT_STOP [INSUFFICIENT_DATA] الوقف أضيق من 1×ATR (ضجيج السوق يضربه) | كل الصفقات: with n=9 avgR=-0.73 / without n=45 avgR=-0.10 | الاقتراح إن تأكد: {'signals.min_risk_atr': 1.0}
+  أهم الخسائر (غير المتوقعة أولاً):
+   * XRPUSDT NORMAL_STOP R=-1.32 متوقع=نعم flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | فشل سريع: ضُرب الوقف خلال شمعتين من الدخول (الكنس ربما كان استمرار هبوط)
+   * TRXUSDT NORMAL_STOP R=-1.279 متوقع=نعم flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | فشل سريع: ضُرب الوقف خلال شمعتين من الدخول (الكنس ربما كان استمرار هبوط)
+   * BTCUSDT NORMAL_STOP R=-1.084 متوقع=نعم flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | فشل سريع: ضُرب الوقف خلال شمعتين من الدخول (الكنس ربما كان استمرار هبوط)
+   * ADAUSDT NORMAL_STOP R=-1.067 متوقع=نعم flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+   * BNBUSDT NORMAL_STOP R=-1.059 متوقع=نعم flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+   * TRXUSDT NORMAL_STOP R=-1.053 متوقع=نعم flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | فشل سريع: ضُرب الوقف خلال شمعتين من الدخول (الكنس ربما كان استمرار هبوط)
+   * SUIUSDT NORMAL_STOP R=-1.039 متوقع=نعم flags=['THIN_RR', 'DEEP_SWEEP', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | كاد ينجح: وصل +1.8R ثم انعكس (درس إدارة صفقة لا درس دخول)
+   * BTCUSDT NORMAL_STOP R=-1.278 متوقع=نعم flags=['TIGHT_STOP', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+   * TRXUSDT NORMAL_STOP R=-1.165 متوقع=نعم flags=['THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+   * BNBUSDT NORMAL_STOP R=-1.145 متوقع=نعم flags=['THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة | فشل سريع: ضُرب الوقف خلال شمعتين من الدخول (الكنس ربما كان استمرار هبوط)
+   * BNBUSDT NORMAL_STOP R=-1.126 متوقع=نعم flags=['TIGHT_STOP', 'THIN_RR', 'TINY_FVG'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+   * BNBUSDT NORMAL_STOP R=-1.123 متوقع=نعم flags=['THIN_RR', 'TINY_FVG', 'LOW_VOLUME'] | ضُرب الوقف ضمن المخاطرة المخططة (≈1R): مخاطرة عقلانية متوقعة
+per symbol (trades, total_R, signals, steps_evaluated):
+  BNBUSDT    trades= 11 R=  -1.87 signals= 15 steps=4332 skipped_not_bullish=3588
+  TRXUSDT    trades= 11 R=  +1.26 signals= 16 steps=4317 skipped_not_bullish=3448
+  AAVEUSDT   trades=  4 R=  +1.98 signals=  4 steps=4465 skipped_not_bullish=3936
+  ADAUSDT    trades=  3 R=  -3.16 signals=  5 steps=4459 skipped_not_bullish=4091
+  BTCUSDT    trades=  3 R=  -3.57 signals=  5 steps=4470 skipped_not_bullish=3834
+  SUIUSDT    trades=  3 R=  +1.09 signals=  3 steps=4435 skipped_not_bullish=4068
+  XRPUSDT    trades=  3 R=  +0.28 signals=  5 steps=4471 skipped_not_bullish=3952
+  ARBUSDT    trades=  2 R=  -2.10 signals=  2 steps=4464 skipped_not_bullish=4297
+  AVAXUSDT   trades=  2 R=  +1.68 signals=  2 steps=4480 skipped_not_bullish=4236
+  ENAUSDT    trades=  2 R=  -2.14 signals=  2 steps=4487 skipped_not_bullish=4266
+  ETHUSDT    trades=  2 R=  +1.21 signals=  3 steps=4473 skipped_not_bullish=4098
+  LINKUSDT   trades=  2 R=  -2.10 signals=  2 steps=4488 skipped_not_bullish=4157
+  SOLUSDT    trades=  2 R=  -0.57 signals=  3 steps=4453 skipped_not_bullish=4214
+  INJUSDT    trades=  1 R=  -1.06 signals=  1 steps=4494 skipped_not_bullish=4314
+  LTCUSDT    trades=  1 R=  -1.04 signals=  3 steps=4480 skipped_not_bullish=4147
+  TAOUSDT    trades=  1 R=  -1.04 signals=  1 steps=4473 skipped_not_bullish=4320
+  UNIUSDT    trades=  1 R=  +0.24 signals=  2 steps=4459 skipped_not_bullish=4166
+  APTUSDT    trades=  0 R=  +0.00 signals=  0 steps=4494 skipped_not_bullish=4488
+  ATOMUSDT   trades=  0 R=  +0.00 signals=  0 steps=4494 skipped_not_bullish=4410
+  DOGEUSDT   trades=  0 R=  +0.00 signals=  0 steps=4494 skipped_not_bullish=4218
+  DOTUSDT    trades=  0 R=  +0.00 signals=  0 steps=4494 skipped_not_bullish=4368
+  FILUSDT    trades=  0 R=  +0.00 signals=  1 steps=4489 skipped_not_bullish=4327
+  HBARUSDT   trades=  0 R=  +0.00 signals=  1 steps=4489 skipped_not_bullish=4176
+  NEARUSDT   trades=  0 R=  +0.00 signals=  1 steps=4489 skipped_not_bullish=4146
+  OPUSDT     trades=  0 R=  +0.00 signals=  0 steps=4494 skipped_not_bullish=4446
+WARNINGS:
+  - single historical period, parameters not tuned or validated out-of-sample: not proof of edge
+elapsed 128s

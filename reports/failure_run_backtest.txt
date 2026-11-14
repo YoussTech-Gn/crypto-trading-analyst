@@ -1,0 +1,6 @@
+FAILURE REPORT  2026-11-14T02:27:36.444017+00:00  script=run_backtest
+Category: DATA_QUALITY   Expected? yes
+Cause: candle data is not valid for analysis (too short, incomplete, or stale)
+What to do: This is an intentional fail-closed exclusion: the symbol is skipped, it is not a code bug.
+Message: No symbol could be downloaded or validated. BTCUSDT: 4h:MALFORMED_CANDLE_DATA | first issue: Unexpected candle duration 7199999ms for timeframe interval 14400000ms at 1593302400000; ETHUSDT: 4h:MALFORMED_CANDLE_DATA | first issue: Unexpected candle duration 7199999ms for timeframe interval 14400000m
+Context: days=730
