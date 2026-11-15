@@ -67,4 +67,11 @@ New contributors are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md); iss
 The one rule that matters most: **an experiment's parameters and its pass/fail rule are written down before it runs, and never changed after
 seeing the result.**
 
+## Governance and maintainers
+This is an owner-led, community-driven project. Anyone can propose improvements through issues and pull requests; trusted maintainers are appointed explicitly and receive only the access needed for their responsibilities.
+
+- Read [GOVERNANCE.md](GOVERNANCE.md) for roles, review expectations, decision-making, and maintainer appointments.
+- See [MAINTAINERS.md](MAINTAINERS.md) for the current maintainer roster.
+- New contributors do not need write access: fork the repository and open a pull request.
+
 Security problems: see [SECURITY.md](SECURITY.md). License: [MIT](LICENSE).
