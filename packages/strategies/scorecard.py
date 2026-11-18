@@ -16,6 +16,7 @@ from typing import Mapping, Sequence
 
 from packages.backtest.engine import Trade
 from packages.backtest.metrics import max_drawdown_r, summarize, time_clustered_mean_se
+from packages.backtest.robustness import trade_shuffle_report
 
 TRIALS_PATH = Path(__file__).resolve().parents[2] / "knowledge" / "lab_trials.json"
 FAST_STOP_BARS = 2
@@ -120,4 +121,6 @@ def score_recipe(per_window: Mapping[str, Sequence[Trade]], goal: Goal = Goal(),
         "windows": windows, "negative_windows": negative, "meets_goal": not unmet,
         "unmet": unmet, "causes": causes,
         "criteria_met": 6 - len(unmet),
+        # Report only (ADR-041): does not change criteria_met or meets_goal, which are pre-registered.
+        "monte_carlo": trade_shuffle_report([t.r_multiple for t in sorted(pooled, key=lambda x: (x.exit_time_ms, x.symbol))]),
     }

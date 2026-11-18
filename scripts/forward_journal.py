@@ -11,6 +11,7 @@
 Decisions are accepted only within 4 hours of the signal candle's close; after that the signal is marked
 "absent" automatically by any command and can no longer be changed (ADR-037).
   python scripts/forward_journal.py review          weekly review (also written to reports/forward_review.txt)
+  python scripts/forward_journal.py verify          check that no past signal or sealed decision was edited (ADR-041)
 Journal: knowledge/forward_journal.jsonl (one JSON object per line).
 """
 from __future__ import annotations
@@ -28,7 +29,8 @@ from packages.analysis import AnalysisEngine  # noqa: E402
 from packages.config.settings import load_config  # noqa: E402
 from packages.backtest.engine import closed_daily_count  # noqa: E402
 from packages.journal.forward import (BACKFILL_MAX_MS, DECISIONS, H4, TRACKED, auto_absent,  # noqa: E402
-                                      backfill_plan, decision_window_open, new_record, review, settle, utc)
+                                      backfill_plan, chain_append, decision_window_open, new_record, review, seal_owner,
+                                      settle, utc, verify_chain)
 from packages.market_data.client import BinancePublicClient  # noqa: E402
 from packages.market_data.validator import CandleValidator  # noqa: E402
 from packages.reporting import run_guarded  # noqa: E402
@@ -58,9 +60,12 @@ def mark_absent(recs: list[dict], now_ms: int) -> int:
     for i, r in enumerate(recs):
         new = auto_absent(r, now_ms)
         if new is not r:
-            recs[i] = new
             n += 1
             print(f"  {r['id']}: no decision within 4 hours -> absent")
+        sealed = seal_owner(new, now_ms)  # ADR-041: decisions are sealed once their window is closed
+        if sealed is not r:
+            recs[i] = sealed
+            n += 1
     return n
 
 
@@ -141,7 +146,7 @@ def cmd_scan(cfg) -> int:
                         continue
                     rec = new_record(name, dec, getattr(rcp, "exit_plan", None), lab, alt, now, close_ms + 1,
                                      backfilled=t != last)
-                    recs.append(rec)
+                    chain_append(recs, rec)  # ADR-041: linked to the previous signal
                     known.add(rid)
                     added.append(rec)
             if setup:
@@ -216,6 +221,11 @@ def cmd_decide(_cfg, a) -> int:
 
 def cmd_review(cfg) -> int:
     lines = [f"FORWARD JOURNAL REVIEW {utc(int(time.time() * 1000))} UTC (ADR-036; paper only)", ""] + review(load_marked(), cfg.backtest.fee_pct_per_side, load_state()["gaps"])
+    chk = verify_chain(load())
+    lines += ["", f"Journal integrity (ADR-041): {'OK' if chk['ok'] else 'BROKEN'}; {chk['chained']} chained signals"
+              + (f", {chk['unchained']} recorded before the chain existed" if chk["unchained"] else "")
+              + f"; chain head {chk['head']}"]
+    lines += [f"  PROBLEM: {p}" for p in chk["problems"]]
     lines += ["", "Rules: verdicts only at 100 and 200 closed signals per recipe. Do not change a rule after a loss."]
     text = "\n".join(lines) + "\n"
     (ROOT / "reports").mkdir(exist_ok=True)
@@ -224,10 +234,19 @@ def cmd_review(cfg) -> int:
     return 0
 
 
+def cmd_verify(_cfg) -> int:
+    chk = verify_chain(load())
+    print(f"journal integrity: {'OK' if chk['ok'] else 'BROKEN'}; chained {chk['chained']}, before the chain {chk['unchained']}; "
+          f"head {chk['head']}")
+    for p in chk["problems"]:
+        print("  PROBLEM: " + p)
+    return 0 if chk["ok"] else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for c in ("scan", "settle", "list", "review"):
+    for c in ("scan", "settle", "list", "review", "verify"):
         sub.add_parser(c)
     d = sub.add_parser("decide")
     d.add_argument("id")
@@ -239,7 +258,7 @@ def main() -> int:
     cfg = load_config()
     if a.cmd == "decide":
         return cmd_decide(cfg, a)
-    return {"scan": cmd_scan, "settle": cmd_settle, "list": cmd_list, "review": cmd_review}[a.cmd](cfg)
+    return {"scan": cmd_scan, "settle": cmd_settle, "list": cmd_list, "review": cmd_review, "verify": cmd_verify}[a.cmd](cfg)
 
 
 if __name__ == "__main__":

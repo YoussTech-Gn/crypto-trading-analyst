@@ -163,3 +163,50 @@ def test_review_shows_backfilled_signals_and_gaps():
     text = "\n".join(review([r], 0.1, [{"symbol": "XUSDT", "from_ms": S0, "to_ms": S0 + H4}]))
     assert "1 found by backfill" in text and "COVERAGE GAPS" in text and "XUSDT" in text
     assert review([], 0.1) == ["no signals yet"]
+
+
+# ---- ADR-041: tamper-evident journal ------------------------------------------------------------------------------
+
+def _chain(n=3):
+    from packages.journal.forward import chain_append
+    recs = []
+    for i in range(n):
+        chain_append(recs, new_record("sweep_only", dec(t=i), None, {}, {}, 0, 0))
+    return recs
+
+
+def test_hash_chain_detects_edits_insertions_and_deletions():
+    from packages.journal.forward import GENESIS, verify_chain
+    recs = _chain()
+    ok = verify_chain(recs)
+    assert ok["ok"] and ok["chained"] == 3 and recs[0]["prev_hash"] == GENESIS and ok["head"] == recs[-1]["hash"]
+    edited = [dict(r) for r in recs]
+    edited[1]["entry"] = 99.0                                   # move a past entry price
+    assert not verify_chain(edited)["ok"]
+    assert not verify_chain([recs[0], recs[2]])["ok"]           # delete a signal
+    inserted = recs[:1] + [new_record("x", dec(t=9), None, {}, {}, 0, 0)] + recs[1:]
+    assert not verify_chain(inserted)["ok"]                     # insert an unchained one
+
+
+def test_settlement_does_not_break_the_chain_and_old_records_are_allowed_first():
+    from packages.journal.forward import chain_append, verify_chain
+    recs = _chain(2)
+    recs[0] = dict(recs[0], status="CLOSED", result_r=1.5)     # settlement fields are outside the hash
+    assert verify_chain(recs)["ok"]
+    old = new_record("sweep_only", dec(t=50), None, {}, {}, 0, 0)  # written before the chain existed
+    mixed = [old]
+    chain_append(mixed, new_record("sweep_only", dec(t=51), None, {}, {}, 0, 0))
+    v = verify_chain(mixed)
+    assert v["ok"] and v["unchained"] == 1
+
+
+def test_owner_decision_is_sealed_after_its_window_and_edits_are_detected():
+    from packages.journal.forward import seal_owner, verify_chain
+    recs = _chain(1)
+    r = recs[0]
+    r["owner"] = {"decision": "skipped", "price": None, "mood": 2, "note": "", "at": ""}
+    assert "owner_seal" not in seal_owner(r, r["candle_open_ms"] + H4 + 60_000)   # still inside the 4h window
+    sealed = seal_owner(r, r["candle_open_ms"] + H4 + 5 * 3_600_000)
+    assert "owner_seal" in sealed and verify_chain([sealed])["ok"]
+    tampered = dict(sealed, owner=dict(sealed["owner"], decision="taken"))
+    assert not verify_chain([tampered])["ok"]

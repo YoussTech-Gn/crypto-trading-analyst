@@ -8,6 +8,8 @@ price, his mood) is stored next to it, so "the system versus me" can be measured
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import asdict
 from datetime import datetime, timezone
@@ -148,6 +150,65 @@ def auto_absent(rec: dict, now_ms: int) -> dict:
     out["owner"] = {"decision": "absent", "price": None, "mood": None, "auto": True, "at": utc(now_ms),
                     "note": "auto: no decision within 4 hours of the candle close"}
     return out
+
+
+# ADR-041: tamper-evident journal (idea from ai-hedge-fund's hash-chained ledger; our own implementation).
+# Each new signal is hashed together with the previous signal's hash, so editing, inserting or deleting any past signal
+# breaks every later link. The owner's decision is sealed (hashed) once its 4-hour window has closed. Settlement results
+# are not hashed: they are re-computable from public candles. Publishing the chain head (it is printed in
+# reports/forward_review.txt, which is committed) anchors the journal in Git history, so a rewritten chain is detectable.
+GENESIS = "0" * 64
+CHAIN_FIELDS = ("id", "recipe", "symbol", "candle_open_ms", "entry", "stop", "target", "planned_rr", "plan", "scanned")
+
+
+def _digest(obj) -> str:
+    return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def signal_hash(rec: dict, prev_hash: str) -> str:
+    return _digest({**{f: rec.get(f) for f in CHAIN_FIELDS}, "prev_hash": prev_hash})
+
+
+def chain_head(recs: Sequence[dict]) -> str:
+    return next((r["hash"] for r in reversed(recs) if r.get("hash")), GENESIS)
+
+
+def chain_append(recs: list, rec: dict) -> dict:
+    """Append a NEW signal record to the journal, linked to the previous one."""
+    prev = chain_head(recs)
+    rec["prev_hash"] = prev
+    rec["hash"] = signal_hash(rec, prev)
+    recs.append(rec)
+    return rec
+
+
+def seal_owner(rec: dict, now_ms: int) -> dict:
+    """Once the decision window is closed, hash the owner's decision so a later edit is detectable. Returns a copy or rec."""
+    if "owner_seal" in rec or rec["owner"].get("decision") is None or decision_window_open(rec, now_ms):
+        return rec
+    out = dict(rec)
+    out["owner_seal"] = _digest({"hash": rec.get("hash"), "owner": rec["owner"]})
+    return out
+
+
+def verify_chain(recs: Sequence[dict]) -> dict:
+    """Check every link and every seal. Records written before ADR-041 (no hash) are allowed only at the start."""
+    problems, unchained, chained, prev = [], 0, 0, GENESIS
+    for i, r in enumerate(recs):
+        if "hash" not in r:
+            if chained:
+                problems.append(f"line {i + 1} {r.get('id')}: unchained record after the chain started (inserted?)")
+            unchained += 1
+            continue
+        chained += 1
+        if r.get("prev_hash") != prev:
+            problems.append(f"line {i + 1} {r['id']}: link broken (a record before it was edited, removed or inserted)")
+        if signal_hash(r, r.get("prev_hash", "")) != r["hash"]:
+            problems.append(f"line {i + 1} {r['id']}: signal fields changed after it was recorded")
+        if "owner_seal" in r and _digest({"hash": r["hash"], "owner": r["owner"]}) != r["owner_seal"]:
+            problems.append(f"line {i + 1} {r['id']}: owner decision changed after it was sealed")
+        prev = r["hash"]
+    return {"ok": not problems, "chained": chained, "unchained": unchained, "problems": problems, "head": prev}
 
 
 def owner_r(rec: dict, fee_pct: float) -> float | None:

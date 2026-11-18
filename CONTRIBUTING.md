@@ -38,6 +38,7 @@ Business logic never lives in `scripts/` or `apps/`; they only call `packages/`.
 ## 4. Pull request checklist
 - [ ] `python -m pytest tests -q` passes
 - [ ] new behaviour has tests (including at least one failure case)
+- [ ] a new feature or recipe passes `python scripts/bias_check.py` (no look-ahead)
 - [ ] no secrets, keys or personal data in the diff
 - [ ] an ADR is added if a decision or an experiment is involved
 - [ ] the PR description says what changed and why, with evidence for any performance claim

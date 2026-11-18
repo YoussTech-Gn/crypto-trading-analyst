@@ -178,6 +178,10 @@ def main() -> int:
         lines.append(f"    orders: signals={f['signals']} filled={filled} unfilled={f['unfilled']} "
                      f"(missed winners: price reached the target without touching the limit = {f['missed_winners']}) "
                      f"still_open_at_data_end={f['open_at_end']}")
+        mc = c.get("monte_carlo")
+        if mc:
+            lines.append(f"    monte carlo (trade-order shuffling, {mc['scenarios']} scenarios): drawdown original {mc['original_dd_r']}R, "
+                         f"median {mc['median_dd_r']}R, 95th pct {mc['p95_dd_r']}R (a lower bound: shuffling hides clustered losses)")
         lines.append("    MISSING: " + ("; ".join(c["unmet"]) if c["unmet"] else "nothing - meets the goal"))
         lines.append("    WHY: " + ("; ".join(c["causes"]) if c["causes"] else "no dominant cause detected"))
     for w, sk in skipped_all.items():

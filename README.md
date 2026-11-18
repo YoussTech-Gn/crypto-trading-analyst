@@ -16,6 +16,8 @@ Its goal is not to sell a "winning bot" but to answer honestly: **does a rule ha
 | Live paper journal | running since 2026-11-14 | [ADR-036](docs/DECISIONS.md) |
 
 Every decision, with its evidence, is in [docs/DECISIONS.md](docs/DECISIONS.md). Negative results are kept on purpose.
+How we guard against look-ahead, overfitting, lucky trade orders and edited records:
+**[docs/HOW_WE_AVOID_FOOLING_OURSELVES.md](docs/HOW_WE_AVOID_FOOLING_OURSELVES.md)**. What is next: [ROADMAP.md](ROADMAP.md).
 
 ## Quick start (5 minutes)
 Requirements: Python 3.11+, Git. Node 18+ only for the web app.
@@ -27,6 +29,11 @@ python -m venv .venv
 pip install -e ".[dev]"
 cp .env.example .env                    # Windows: copy .env.example .env
 python -m pytest tests -q               # everything should pass, no network needed
+```
+After the first `overnight.py` run (it fills the local candle cache), check for look-ahead and warm-up bias any time, offline:
+```bash
+python scripts/bias_check.py
+python scripts/forward_journal.py verify   # the live journal was not edited
 ```
 Then, with internet access:
 ```bash
@@ -61,6 +68,19 @@ docs/                decisions (ADRs), architecture, data dictionary, collaborat
 config/default.yaml  every tunable number, validated at start-up
 ```
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Older milestone notes: [docs/MILESTONES.md](docs/MILESTONES.md).
+
+## Standing on the shoulders of
+We studied these open-source projects and re-implemented some of their ideas in our own code (no code was copied; licenses differ):
+
+| Project | Idea we adopted | Where |
+|---|---|---|
+| [Freqtrade](https://github.com/freqtrade/freqtrade) | look-ahead and recursive (warm-up) analysis | `scripts/bias_check.py` |
+| [Jesse](https://github.com/jesse-ai/jesse) | trade-order shuffling Monte Carlo | `packages/backtest/robustness.py` |
+| [ai-hedge-fund](https://github.com/virattt/ai-hedge-fund) | hash-chained paper ledger | `packages/journal/forward.py` |
+| [TradingAgents](https://github.com/TauricResearch/TradingAgents), [Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) | analyst debate, every number grounded in tool output | planned, see [ROADMAP.md](ROADMAP.md) |
+
+What is different here: every experiment is pre-registered, confidence intervals are clustered by week and corrected for the number
+of strategies tried, and unseen coins are a one-shot gate.
 
 ## Contributing
 New contributors are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md); issues labelled `good first issue` are a good entry point.

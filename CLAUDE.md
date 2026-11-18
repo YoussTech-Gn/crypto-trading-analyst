@@ -26,8 +26,11 @@ The code is the analyst; the owner (Youssef) decides and executes by hand. LLMs 
 * Collaboration with Gemini: `docs/COLLAB.md` (append-only threads T-1..T-3, open questions in T-2 and T-3);
   `python scripts/collab_loop.py` alternates Gemini and Claude CLIs (ADR-035).
 
+## Tools added by ADR-041
+* `python scripts/bias_check.py` (look-ahead and warm-up checks, offline); `python scripts/forward_journal.py verify` (hash-chained journal);
+  every lab scorecard has a `monte_carlo` block (trade-order shuffling, report only).
+
 ## Open items
-* First commit and public push (ADR-039 prepared everything; the owner pushes).
 * Kill rule for the forward journal: DONE. The owner accepted ADR-036's rule unchanged for all 3 recipes on 2026-11-15; it is frozen.
 * Possible next research (needs an ADR first): FG2 features (taker-buy share, funding, open interest) judged by gain over FG1;
   a survivorship-free universe for rotation.

@@ -60,6 +60,8 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 | ADR-037 | Third owner decision 'absent'; no decision 4 hours after the candle close -> absent automatically, then frozen | Accepted | packages/journal/forward.py, scripts/forward_journal.py |
 | ADR-038 | Scan backfills every missed closed 4H candle (max 7 days, never before 2026-11-14 12:00 UTC); older misses logged as coverage gaps | Accepted | packages/journal/forward.py, scripts/forward_journal.py |
 | ADR-039 | Open-source hardening: security fixes, private journal excluded, contributor docs, CI | Accepted | docker-compose.yml, apps/api/main.py, .gitignore, README.md, CONTRIBUTING.md, SECURITY.md, .github/ |
+| ADR-040 | Stay local until the forward journal proves value; cloud server and database only after that | Accepted | (none) |
+| ADR-041 | Ideas adopted from leading open-source trading projects: bias checks, trade-shuffle Monte Carlo, hash-chained journal | Accepted | packages/backtest/bias.py, packages/backtest/robustness.py, packages/journal/forward.py |
 
 ## Open items and pending decisions
 * M6a lab run on the main basket is done (ADR-024). `--basket alt` is run once, by the overnight runner, on the frozen recipes (ADR-029).
@@ -554,3 +556,28 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 * **Contributor structure**: new `README.md` (disclaimer, findings table, 5-minute quick start, repository map), `CONTRIBUTING.md` (where each kind of change goes, the 7 rules, PR checklist), `SECURITY.md`, `CODE_OF_CONDUCT.md`, MIT `LICENSE`, GitHub Actions CI (tests on Python 3.11 and 3.12 for every push and pull request), PR and issue templates (the research-idea template asks for fixed parameters and a kill rule up front). `docs/ARCHITECTURE.md` rewritten to the current code; the old texts are kept as `docs/ARCHITECTURE_M1.md` and `docs/MILESTONES.md`.
 * **Check**: dry-run `git add` lists 156 files (1.1 MB), scanned for keys, tokens and e-mail addresses: none. Full suite: 229 passed.
 * **Note**: written in the claude.ai chat while the VS Code session wrote ADR-038 (scan backfill) at the same time; numbered 039 to keep one number per decision.
+
+---
+## ADR-040: No cloud deployment yet
+* **Date**: 2026-11-14
+* **Status**: Accepted (owner's decision)
+* **Decision**: the system keeps running on the owner's computer (`scripts/journal_cycle.cmd`, Task Scheduler every hour, backfill per ADR-038). A paid server, a hosted database and a polished public web app come only after the project proves it is worth it.
+* **Trigger to revisit**: the first ADR-036 verdict (100 closed signals for a recipe), or the laptop's coverage gaps becoming too long for the 7-day backfill.
+* **Notes for that day**: Binance public data refuses some cloud regions, so the host region must be tested first; the PostgreSQL code path already exists (Neon project "Trade"), so the database move is configuration, not new code.
+
+---
+## ADR-041: Ideas adopted from leading open-source trading projects
+* **Date**: 2026-11-18
+* **Status**: Accepted. These are tools and reports; no pre-registered rule, threshold or verdict is changed by them.
+* **Context**: the owner asked to study the most-starred active trading repositories of 2026 and bring what helps into this project. A research report compared Freqtrade, TradingAgents, Jesse, ai-hedge-fund, Qlib, NautilusTrader, Vibe-Trading and Hummingbot. Ideas were re-implemented, never copied: Freqtrade and NautilusTrader are GPL/LGPL and this repository is MIT.
+* **Decision**:
+  1. **Bias checks** (Freqtrade `lookahead-analysis` / `recursive-analysis`): `packages/backtest/bias.py`, `scripts/bias_check.py` (offline, cache only, exit code 1 on look-ahead). Look-ahead: every learning feature of candle k must be identical with the history cut right after k. Warm-up: features of the last candle with 200/500/1000 startup candles; recipe decisions with 600 vs 900 candle windows. A unit test also proves the checker catches a deliberately leaking feature.
+  2. **Trade-order shuffling Monte Carlo** (Jesse `monte_carlo_trades`): `packages/backtest/robustness.py`, 1000 scenarios, seed 7, at least 30 trades. Every scorecard gets a `monte_carlo` block (original drawdown, median, 95th percentile, percentile of the original) and `run_lab.py` prints it. It is report-only: `criteria_met` and `meets_goal` are unchanged. Stated limit: shuffling scatters losses that really cluster on the same days, so its drawdowns are a lower bound.
+  3. **Tamper-evident forward journal** (ai-hedge-fund hash-chained ledger): each new signal stores `prev_hash` and `hash` (SHA-256 over its immutable fields and the previous hash); the owner's decision gets an `owner_seal` once its 4-hour window closes; settlement fields are not hashed because they are re-computable. `forward_journal.py verify` checks the chain; `review` prints the chain head, so committing `reports/forward_review.txt` anchors the journal in Git history. Records written before this ADR are allowed only before the first chained record.
+  4. **Documentation**: `docs/HOW_WE_AVOID_FOOLING_OURSELVES.md` (each trap, its guard, its file), `CHANGELOG.md`, `ROADMAP.md`, a "Standing on the shoulders of" table in `README.md` crediting the projects.
+* **Findings from the first runs** (synthetic candles; the owner's cached Binance data was not reachable from this session):
+  * No look-ahead in any learning feature (sampled candles identical with the future removed).
+  * Warm-up issue found: `atr_pct_rank200` differs by 13.6% relative between 200 and 1000 startup candles, because ATR is undefined for its first 13 candles and those placeholders sit inside the 200-candle rank window. In the M7 dataset this affects about the first 14 valid rows per symbol (of about 640,000 rows), so ADR-034's conclusion is unchanged. Not fixed here (fixing data after a published result needs its own ADR); listed as a good first issue in `ROADMAP.md`.
+  * Recipe decisions for the 3 tracked recipes did not change between 600 and 900 candle windows (30 of 30 steps identical).
+* **Not adopted, and why**: a README in Arabic (Vibe-Trading has one) conflicts with the project rule "English only in project files" (CLAUDE.md rule 4); the owner can change that rule. An LLM analyst committee and an MCP server are on the roadmap, not built: they need an API budget and a design ADR.
+* **Files**: `packages/backtest/bias.py`, `packages/backtest/robustness.py`, `packages/journal/forward.py`, `packages/strategies/scorecard.py`, `scripts/bias_check.py`, `scripts/forward_journal.py`, `scripts/run_lab.py`, `tests/unit/test_bias.py`, `tests/unit/test_robustness.py`, `tests/unit/test_forward_journal.py`, `docs/HOW_WE_AVOID_FOOLING_OURSELVES.md`, `CHANGELOG.md`, `ROADMAP.md`, `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`.
