@@ -1,0 +1,33 @@
+ENGINEERING FAILURE REPORT | 2026-11-18 | ADR-043
+Scope: deterministic software diagnostics on synthetic inputs. No market sample.
+
+1. Terminal verdict reversal
+   Call packages.journal.forward.verdict with one observation per week.
+   First 100 observations: -1R each. Next 100 observations: +3R each.
+   Expected: the initial kill remains final when reviewing 200 observations.
+   Observed: KILLED at 100 (upper bound -1.000), then PASSED at 200
+   (lower bound +0.722). The function switches slices at n >= 200.
+
+2. Lost journal edit
+   Redirect scripts.forward_journal.JOURNAL to a fresh temporary directory.
+   Save row A with no owner choice. Load twice (scan copy, decision copy).
+   Set A's owner to skipped in the decision copy and save. Append B to
+   the scan copy and save. Read the final file with the production loader.
+   Expected: A retains skipped and B exists.
+   Observed: A's owner is null and B exists. Each replace succeeded.
+   This isolates the persistence operation with minimal rows.
+
+3. Future availability changes a current learning feature
+   Use tests.unit.test_bias.synthetic(500, seed) for BTCUSDT (seed 3)
+   and PEERUSDT (seed 4). Supply both array pairs to build_dataset through
+   load_cache_arrays, with both symbols in main and an empty alt basket.
+   Read BTC at index 300. Remove only the peer's 4H candle at index 310
+   from each of its 4H arrays. Build again and read BTC at the same time.
+   Expected: identical active count, xs_rank_roc24 and xs_rank_relvol.
+   Observed before: 2, 0.5, 0.5. After: 1, 1.0, 1.0.
+   Label eligibility filters the peer universe before ranking.
+
+Existing regression suite: 241 passed, one FastAPI/Starlette TestClient
+deprecation warning (Python 3.12.10, Windows). The three diagnostics above
+were run separately. Production impact and historical effect sizes were
+not measured. See MEETING_AGENT.md for proposed repairs and closure tests.

@@ -62,6 +62,8 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 | ADR-039 | Open-source hardening: security fixes, private journal excluded, contributor docs, CI | Accepted | docker-compose.yml, apps/api/main.py, .gitignore, README.md, CONTRIBUTING.md, SECURITY.md, .github/ |
 | ADR-040 | Stay local until the forward journal proves value; cloud server and database only after that | Accepted | (none) |
 | ADR-041 | Ideas adopted from leading open-source trading projects: bias checks, trade-shuffle Monte Carlo, hash-chained journal | Accepted | packages/backtest/bias.py, packages/backtest/robustness.py, packages/journal/forward.py |
+| ADR-043 | Record a project review and peer discussion in the root meeting file | Accepted | MEETING_AGENT.md |
+| ADR-044 | Serialize forward journal updates and recover an interrupted scan commit | Accepted | scripts/forward_journal.py, tests/integration/test_journal_commands.py |
 
 ## Open items and pending decisions
 * M6a lab run on the main basket is done (ADR-024). `--basket alt` is run once, by the overnight runner, on the frozen recipes (ADR-029).
@@ -581,3 +583,24 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
   * Recipe decisions for the 3 tracked recipes did not change between 600 and 900 candle windows (30 of 30 steps identical).
 * **Not adopted, and why**: a README in Arabic (Vibe-Trading has one) conflicts with the project rule "English only in project files" (CLAUDE.md rule 4); the owner can change that rule. An LLM analyst committee and an MCP server are on the roadmap, not built: they need an API budget and a design ADR.
 * **Files**: `packages/backtest/bias.py`, `packages/backtest/robustness.py`, `packages/journal/forward.py`, `packages/strategies/scorecard.py`, `scripts/bias_check.py`, `scripts/forward_journal.py`, `scripts/run_lab.py`, `tests/unit/test_bias.py`, `tests/unit/test_robustness.py`, `tests/unit/test_forward_journal.py`, `docs/HOW_WE_AVOID_FOOLING_OURSELVES.md`, `CHANGELOG.md`, `ROADMAP.md`, `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`.
+
+---
+## ADR-043: Engineering review of the paper measurement pipeline
+* **Date**: 2026-11-18
+* **Status**: Accepted for the review and meeting record. Implementation proposals remain open.
+* **Decision**: Keep the owner's requested three-agent review in `MEETING_AGENT.md`. Attribute peer input to the participant who actually supplied it. Preserve ADR-036's terminal decisions at the frozen checkpoints and the spent ADR-031 gate.
+* **Why / evidence**: ADR-036 and the checkpoint selection in `packages/journal/forward.py` need reconciling. Multiple commands in `scripts/forward_journal.py` replace the same journal. Assess these as software correctness issues using synthetic inputs, the existing suite, source inspection and published reports.
+* **Diagnostic cases fixed before running**: Give the first 100 synthetic observations a return of -1R each, the next 100 +3R each, with one observation per synthetic week. The first kill must remain terminal. On a disposable file interleave two reads, an owner update and a scan append followed by their saves. Both changes must survive. Failure means a software defect. These checks do not measure strategy performance.
+* **Files**: `MEETING_AGENT.md` (review, discussion, proposed repairs and acceptance tests), `reports/failure_meeting_audit.txt` (synthetic failure evidence), `docs/DECISIONS.md` (this entry and index).
+* **Additional independent software check, fixed before execution**: Generate two synthetic symbols from the existing bias-test fixture with 500 four-hour candles and seeds 3 and 4. At index 300, removing only the second symbol's candle 310 must leave the first symbol's active-universe count and cross-sectional inputs at index 300 unchanged. This checks the assembled dataset and does not fit a model.
+* **Results**: All three diagnostic invariants failed, as recorded in `reports/failure_meeting_audit.txt`. The existing Windows Python suite passed 241 tests with one deprecation warning. The ordering proposed in the meeting puts durable journal writes before terminal checkpoint persistence. The review records no new trading result.
+
+---
+## ADR-044: Serialize forward journal updates
+* **Date**: 2026-11-18
+* **Status**: Accepted for implementation at the owner's request.
+* **Decision**: Keep the existing JSONL and scan-state formats. Use a local SQLite sidecar solely for its cross-process write lock. Fetch market data outside the journal lock. Each symbol's scan reads current progress under the lock, appends only new IDs to the current chain and publishes the journal before the watermark. Settlement and owner updates read current rows under the same lock.
+* **Why / evidence**: The overlapping decision and scan in `reports/failure_meeting_audit.txt` lost a saved choice. Atomic file replacement alone allowed a stale snapshot to overwrite newer rows.
+* **Acceptance fixed before testing**: During a scan fetch, commit an owner decision from another process. After reopening and retrying, both the decision and exactly one new signal must survive with a valid chain. Interrupt between journal and watermark saves and retry. Also exercise an owner decision during settlement. Use disposable files and synthetic candles.
+* **Files**: `scripts/forward_journal.py`, `tests/integration/test_journal_commands.py`, `docs/DECISIONS.md`, `MEETING_AGENT.md`.
+* **Verification**: Windows Python 3.12.10, `.venv\Scripts\python -m pytest tests -q`: 246 passed, one existing TestClient deprecation warning. All five new command tests passed using disposable storage.

@@ -18,8 +18,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
 import sys
 import time
+from contextlib import closing, contextmanager
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +41,15 @@ from scripts.run_lab import BASKETS  # noqa: E402
 
 JOURNAL = ROOT / "knowledge" / "forward_journal.jsonl"
 STATE = ROOT / "knowledge" / "forward_scan_state.json"  # last analysed 4H candle per symbol + coverage gaps (ADR-038)
+
+
+@contextmanager
+def journal_lock():
+    """Serialize local file operations across CLI processes (ADR-044). Closing releases the OS lock."""
+    JOURNAL.parent.mkdir(parents=True, exist_ok=True)
+    with closing(sqlite3.connect(JOURNAL.with_suffix(".lock.sqlite3"), timeout=30)) as lock:
+        lock.execute("BEGIN IMMEDIATE")
+        yield
 
 
 def load() -> list[dict]:
@@ -70,6 +81,7 @@ def mark_absent(recs: list[dict], now_ms: int) -> int:
 
 
 def load_marked() -> list[dict]:
+    """Read and persist expired owner decisions while the caller holds journal_lock."""
     recs = load()
     if mark_absent(recs, int(time.time() * 1000)):
         save(recs)
@@ -95,6 +107,35 @@ def save_state(state: dict) -> None:
     tmp.replace(STATE)
 
 
+@journal_lock()
+def commit_scan(sym, open_times, candidates, now, window_4h):
+    """Recheck the cursor after analysis: another scanner may have committed in the meantime."""
+    state = load_state()
+    idx, gap = backfill_plan(open_times, state["last_open_ms"].get(sym), now, window_4h)
+    if not idx:
+        return [], None
+
+    recs = load()
+    start = len(recs)
+    known = {r["id"] for r in recs}
+    for rec in candidates:
+        if rec["candle_open_ms"] >= open_times[idx[0]] and rec["id"] not in known:
+            chain_append(recs, rec)
+            known.add(rec["id"])
+    marked = mark_absent(recs, int(time.time() * 1000))
+    if len(recs) > start or marked or not JOURNAL.exists():
+        save(recs)
+
+    gap_record = None
+    if gap:
+        gap_record = {"symbol": sym, "from_ms": gap[0], "to_ms": gap[1], "noted": utc(now)}
+        state["gaps"].append(gap_record)
+    # A crash before the cursor replacement replays the same interval and deduplicates its IDs.
+    state["last_open_ms"][sym] = open_times[idx[-1]]
+    save_state(state)
+    return recs[start:], gap_record
+
+
 def cmd_scan(cfg) -> int:
     """ADR-038: analyse every closed 4H candle not analysed yet (at most 7 days back), each with the data that was
     closed at that candle's close, exactly as the backtester slices it."""
@@ -107,9 +148,9 @@ def cmd_scan(cfg) -> int:
     w4, w1 = cfg.backtest.analysis_window_4h, cfg.backtest.analysis_window_1d
     extra_4h = BACKFILL_MAX_MS // H4 + 2
     extra_1d = BACKFILL_MAX_MS // 86_400_000 + 20
-    state = load_state()
-    recs = load_marked()
-    known = {r["id"] for r in recs}
+    with journal_lock():
+        load_marked()
+        last_open = load_state()["last_open_ms"]
     now = int(time.time() * 1000)
     added, skipped, analysed, new_gaps = [], [], 0, []
     with BinancePublicClient(cfg.exchange) as client:
@@ -122,12 +163,11 @@ def cmd_scan(cfg) -> int:
             except Exception as exc:  # fail closed per symbol; its state is not advanced, so the next scan backfills it
                 skipped.append(f"{sym}: {str(exc)[:60]}")
                 continue
-            idx, gap = backfill_plan([c.open_time_ms for c in setup], state["last_open_ms"].get(sym), now, w4)
-            if gap:
-                g = {"symbol": sym, "from_ms": gap[0], "to_ms": gap[1], "noted": utc(now)}
-                state["gaps"].append(g)
-                new_gaps.append(g)
-            last = len(setup) - 1
+            open_times = [c.open_time_ms for c in setup]
+            idx, _ = backfill_plan(open_times, last_open.get(sym), now, w4)
+            if not idx:
+                continue
+            candidates = []
             for t in idx:
                 close_ms = setup[t].close_time_ms
                 k = closed_daily_count(daily, close_ms)
@@ -139,21 +179,13 @@ def cmd_scan(cfg) -> int:
                 analysed += 1
                 for name, rcp in recipes.items():
                     dec = rcp.decide(a)
-                    if dec.decision != "SIGNAL":
-                        continue
-                    rid = f"{name}:{sym}:{dec.setup_candle_open_time_ms}"
-                    if rid in known:
-                        continue
-                    rec = new_record(name, dec, getattr(rcp, "exit_plan", None), lab, alt, now, close_ms + 1,
-                                     backfilled=t != last)
-                    chain_append(recs, rec)  # ADR-041: linked to the previous signal
-                    known.add(rid)
-                    added.append(rec)
-            if setup:
-                state["last_open_ms"][sym] = max(setup[last].open_time_ms, state["last_open_ms"].get(sym, 0))
-    mark_absent(recs, now)
-    save(recs)
-    save_state(state)
+                    if dec.decision == "SIGNAL":
+                        candidates.append(new_record(name, dec, getattr(rcp, "exit_plan", None), lab, alt,
+                                                     now, close_ms + 1, backfilled=t != len(setup) - 1))
+            committed, gap = commit_scan(sym, open_times, candidates, now, w4)
+            added.extend(committed)
+            if gap:
+                new_gaps.append(gap)
     print(f"scan {utc(now)} UTC: {analysed} candles analysed, {len(added)} new signals "
           f"({sum(r['backfilled'] for r in added)} by backfill), {len(skipped)} symbols skipped (fail-closed)")
     for r in added:
@@ -171,27 +203,37 @@ def cmd_scan(cfg) -> int:
 
 
 def cmd_settle(cfg) -> int:
-    recs = load_marked()
-    todo = sorted({r["symbol"] for r in recs if r["status"] in ("PENDING", "OPEN")})
+    with journal_lock():
+        recs = load_marked()
+        todo = sorted({r["symbol"] for r in recs if r["status"] in ("PENDING", "OPEN")})
     validator = CandleValidator(cfg.timeframes)
     changed = 0
     with BinancePublicClient(cfg.exchange) as client:
         for sym in todo:
             setup = fetch(client, validator, sym, "4h", 1000)
-            for i, r in enumerate(recs):
-                if r["symbol"] == sym and r["status"] in ("PENDING", "OPEN"):
+            with journal_lock():
+                recs = load()
+                updated = 0
+                for i, r in enumerate(recs):
+                    if r["symbol"] != sym or r["status"] not in ("PENDING", "OPEN"):
+                        continue
+                    if setup and r["candle_open_ms"] > setup[-1].open_time_ms:
+                        continue  # another scan recorded this signal after our fetch
                     new = settle(r, setup, cfg.signals.expiry_candles, cfg.backtest.max_hold_candles,
                                  cfg.backtest.fee_pct_per_side, cfg.backtest.stop_slippage_pct)
-                    if new != r:
+                    if new != r and not (r["status"] == "OPEN" and new["status"] == "PENDING"):
                         recs[i] = new
-                        changed += 1
+                        updated += 1
                         if new["status"] in ("CLOSED", "UNFILLED"):
                             print(f"  {new['id']}: {new['status']} {new.get('exit_reason') or ''} R={new.get('result_r')}")
-    save(recs)
+                if updated:
+                    save(recs)
+                    changed += updated
     print(f"settle: {changed} records updated, {sum(r['status'] in ('PENDING', 'OPEN') for r in recs)} still open")
     return 0
 
 
+@journal_lock()
 def cmd_list(_cfg) -> int:
     for r in load_marked():
         if r["owner"]["decision"] is None or r["status"] in ("PENDING", "OPEN"):
@@ -199,6 +241,7 @@ def cmd_list(_cfg) -> int:
     return 0
 
 
+@journal_lock()
 def cmd_decide(_cfg, a) -> int:
     recs = load_marked()
     hit = [i for i, r in enumerate(recs) if r["id"] == a.id]
@@ -219,9 +262,11 @@ def cmd_decide(_cfg, a) -> int:
     return 0
 
 
+@journal_lock()
 def cmd_review(cfg) -> int:
-    lines = [f"FORWARD JOURNAL REVIEW {utc(int(time.time() * 1000))} UTC (ADR-036; paper only)", ""] + review(load_marked(), cfg.backtest.fee_pct_per_side, load_state()["gaps"])
-    chk = verify_chain(load())
+    recs = load_marked()
+    lines = [f"FORWARD JOURNAL REVIEW {utc(int(time.time() * 1000))} UTC (ADR-036; paper only)", ""] + review(recs, cfg.backtest.fee_pct_per_side, load_state()["gaps"])
+    chk = verify_chain(recs)
     lines += ["", f"Journal integrity (ADR-041): {'OK' if chk['ok'] else 'BROKEN'}; {chk['chained']} chained signals"
               + (f", {chk['unchained']} recorded before the chain existed" if chk["unchained"] else "")
               + f"; chain head {chk['head']}"]
@@ -234,6 +279,7 @@ def cmd_review(cfg) -> int:
     return 0
 
 
+@journal_lock()
 def cmd_verify(_cfg) -> int:
     chk = verify_chain(load())
     print(f"journal integrity: {'OK' if chk['ok'] else 'BROKEN'}; chained {chk['chained']}, before the chain {chk['unchained']}; "
