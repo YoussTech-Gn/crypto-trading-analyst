@@ -67,6 +67,7 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 | ADR-044 | Serialize forward journal updates and recover an interrupted scan commit | Accepted | scripts/forward_journal.py, tests/integration/test_journal_commands.py |
 | ADR-045 | Notifications, dashboard, cycle watchdog and a market-data-only fallback host | Accepted | packages/notify/, packages/reporting/dashboard.py, scripts/journal_cycle.py, packages/market_data/client.py |
 | ADR-046 | Health alert after two missed hourly scans, plus a back-online message | Accepted | packages/notify/planner.py, tests/unit/test_notify.py |
+| ADR-047 | Outside watcher ping (dead man's switch) after every cycle | Accepted | packages/notify/heartbeat.py, scripts/heartbeat.py, scripts/journal_cycle.py |
 
 ## Open items and pending decisions
 * M6a lab run on the main basket is done (ADR-024). `--basket alt` is run once, by the overnight runner, on the frozen recipes (ADR-029).
@@ -641,3 +642,13 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 * **Not changed**: no rule, threshold, recipe, journal record or verdict; the cause of the failed scheduled runs is not fixed here.
 * **Verification**: `tests/unit/test_notify.py` (no alert after one missed run, alert after two, one back-online message); one morning-summary test fixture moved its last good scan from 3 h to 1 h before the call, because a 3-hour gap now correctly raises an alert. Linux VM: 215 unit tests passed (`test_backtest.py` excluded for time).
 * **Files**: `packages/notify/planner.py`, `tests/unit/test_notify.py`, `docs/DECISIONS.md`.
+
+## ADR-047: Outside watcher ping (dead man's switch)
+* **Date**: 2026-11-22
+* **Status**: Accepted (owner: "go ahead")
+* **Context**: ADR-046's alert is sent by the laptop itself, so it cannot fire when the laptop is asleep, off or offline - the very case seen on 2026-11-22. Only a watcher outside the laptop can notice silence.
+* **Decision**: after every cycle, `scripts/journal_cycle.py` runs `scripts/heartbeat.py` as a last step under the same watchdog (60 s limit). It pings `NOTIFY_HEARTBEAT_URL` after a good scan and `NOTIFY_HEARTBEAT_URL/fail` after a failed scan (healthchecks.io convention). The outside service (suggested: healthchecks.io free plan, period 1 hour, grace 1 hour, alerting through its ntfy integration) alerts the owner when pings stop or a fail ping arrives. The ping is sent at the END of the cycle so a cycle that hangs or dies before finishing also counts as silence. The heartbeat step is recorded in `cycle_health.json` but does not change a run's `ok`.
+* **Security**: the URL is a secret kept only in the git-ignored `.env`; it is never printed (errors report the exception type only); only `https://` URLs are used; the ping carries no data. Off when unset.
+* **Not changed**: no rule, threshold, recipe, journal record or verdict.
+* **Verification**: `tests/unit/test_heartbeat.py` (success and fail targets, https only, URL never in output, never raises, off when unset); Linux VM: 218 unit tests passed (`test_backtest.py` excluded for time); `scripts/heartbeat.py ok` without a URL prints "off".
+* **Files**: `packages/notify/heartbeat.py`, `scripts/heartbeat.py`, `scripts/journal_cycle.py`, `tests/unit/test_heartbeat.py`, `.env.example`, `docs/DECISIONS.md`.

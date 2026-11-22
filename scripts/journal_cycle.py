@@ -1,4 +1,4 @@
-"""Hourly cycle with a watchdog (ADR-045): scan, settle, dashboard, notify. Each step runs in its own process with a hard
+"""Hourly cycle with a watchdog (ADR-045): scan, settle, dashboard, notify, then the outside watcher ping (ADR-047). Each step runs in its own process with a hard
 time limit, so one frozen network call (as on 2026-11-21 20:05) can never block the following hours. Writes
 knowledge/cycle_health.json (last good scan, failures in the last 24 hours) for the dashboard and the health alert.
 
@@ -56,7 +56,10 @@ def main() -> int:
             # written before dashboard/notify so they see this run's result
             HEALTH.parent.mkdir(exist_ok=True)
             HEALTH.write_text(json.dumps({**health, "runs": runs}, indent=1), encoding="utf-8")
-    runs.append({"at": now, "ok": all(s["rc"] == 0 for s in steps.values()), "steps": steps})
+    ok = all(s["rc"] == 0 for s in steps.values())
+    # outside watcher ping (ADR-047), last, under the same watchdog; not part of "ok"
+    steps["heartbeat"] = run_step("heartbeat", ["scripts/heartbeat.py", "ok" if steps["scan"]["rc"] == 0 else "fail"], 60)
+    runs.append({"at": now, "ok": ok, "steps": steps})
     health["runs"] = runs
     health["failures_24h"] = sum(1 for r in runs if not r["ok"])
     if steps["scan"].get("host"):
