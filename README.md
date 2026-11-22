@@ -37,6 +37,7 @@ python scripts/forward_journal.py verify   # the live journal was not edited
 ```
 Then, with internet access:
 ```bash
+python scripts/trader_view.py           # one screen, plain words: market trend and what each rule is waiting for
 python scripts/run_scan.py              # rank today's liquid USDT pairs
 python scripts/forward_journal.py scan  # live paper signals on the last closed 4H candle
 python scripts/overnight.py             # the full research pass (download, lab, freeze, unseen-coin gate, report)

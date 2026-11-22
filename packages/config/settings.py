@@ -32,6 +32,9 @@ class ExchangeConfig(BaseModel):
     max_retries: int = Field(default=3, ge=0, le=10)
     retry_backoff_seconds: float = Field(default=0.5, ge=0.0, le=30.0)
     max_rate_limit_weight_per_minute: int = Field(default=1200, ge=100, le=6000)
+    # ADR-045: Binance's documented market-data-only host (different domain, no API key). Used only after the main host
+    # fails with a NETWORK error (DNS, connection), never for HTTP errors or rate limits.
+    fallback_base_urls: tuple[str, ...] = ("https://data-api.binance.vision",)
 
     @field_validator("base_url")
     @classmethod

@@ -59,3 +59,12 @@ knowledge/forward_scan_state.tmp
 # Scratch
 _to_delete/
 .claude/settings.local.json
+
+# Local runtime state (ADR-045): personal journal view, notification state, health; never public
+reports/dashboard.html
+knowledge/market_view.json
+knowledge/notify_state.json
+knowledge/notify_state.tmp
+knowledge/cycle_health.json
+knowledge/cycle_health.tmp
+knowledge/forward_journal.lock.sqlite3

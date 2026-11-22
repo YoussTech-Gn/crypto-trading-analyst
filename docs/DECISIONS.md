@@ -62,8 +62,10 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 | ADR-039 | Open-source hardening: security fixes, private journal excluded, contributor docs, CI | Accepted | docker-compose.yml, apps/api/main.py, .gitignore, README.md, CONTRIBUTING.md, SECURITY.md, .github/ |
 | ADR-040 | Stay local until the forward journal proves value; cloud server and database only after that | Accepted | (none) |
 | ADR-041 | Ideas adopted from leading open-source trading projects: bias checks, trade-shuffle Monte Carlo, hash-chained journal | Accepted | packages/backtest/bias.py, packages/backtest/robustness.py, packages/journal/forward.py |
+| ADR-042 | Trader view: one plain-language screen of the market and of what each tracked rule is waiting for | Accepted | packages/signals/explain.py, scripts/trader_view.py |
 | ADR-043 | Record a project review and peer discussion in the root meeting file | Accepted | MEETING_AGENT.md |
 | ADR-044 | Serialize forward journal updates and recover an interrupted scan commit | Accepted | scripts/forward_journal.py, tests/integration/test_journal_commands.py |
+| ADR-045 | Notifications, dashboard, cycle watchdog and a market-data-only fallback host | Accepted | packages/notify/, packages/reporting/dashboard.py, scripts/journal_cycle.py, packages/market_data/client.py |
 
 ## Open items and pending decisions
 * M6a lab run on the main basket is done (ADR-024). `--basket alt` is run once, by the overnight runner, on the frozen recipes (ADR-029).
@@ -585,6 +587,15 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 * **Files**: `packages/backtest/bias.py`, `packages/backtest/robustness.py`, `packages/journal/forward.py`, `packages/strategies/scorecard.py`, `scripts/bias_check.py`, `scripts/forward_journal.py`, `scripts/run_lab.py`, `tests/unit/test_bias.py`, `tests/unit/test_robustness.py`, `tests/unit/test_forward_journal.py`, `docs/HOW_WE_AVOID_FOOLING_OURSELVES.md`, `CHANGELOG.md`, `ROADMAP.md`, `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`.
 
 ---
+## ADR-042: Trader view
+* **Date**: 2026-11-18
+* **Status**: Accepted (owner's request: use the project as a trader, easy to read)
+* **Decision**: `scripts/trader_view.py` shows, for the last closed 4H candle: Bitcoin's daily trend in words, how many coins are in a daily uptrend, any signal now, the rules that miss only one condition ("closest to a signal"), and a table with one line per coin and, for each tracked rule, the number of conditions still missing (0 = SIGNAL). `packages/signals/explain.py` translates every check name into what the rule is waiting for. It reads public data (or `--offline` from the cache), records nothing, and says on every screen that it is not advice.
+* **Why**: `forward_journal.py scan` only says "0 new signals"; a trader cannot tell whether the market, the data or the code is the reason. The first offline run (cache of 2026-11-14) shows the answer: Bitcoin's daily trend is down (lower highs and lower lows), 0 of 25 coins are in a daily uptrend, and on XRP and SUI a false break of a low happened but the rule refused it only because of the daily trend.
+* **Limits**: the count of missing conditions is not a probability; "1 missing" does not mean "almost a trade". The view does not replace the journal: only `forward_journal.py` records signals and decisions.
+* **Files**: `packages/signals/explain.py`, `scripts/trader_view.py`, `tests/unit/test_explain.py`, `README.md`.
+
+---
 ## ADR-043: Engineering review of the paper measurement pipeline
 * **Date**: 2026-11-18
 * **Status**: Accepted for the review and meeting record. Implementation proposals remain open.
@@ -604,3 +615,19 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 * **Acceptance fixed before testing**: During a scan fetch, commit an owner decision from another process. After reopening and retrying, both the decision and exactly one new signal must survive with a valid chain. Interrupt between journal and watermark saves and retry. Also exercise an owner decision during settlement. Use disposable files and synthetic candles.
 * **Files**: `scripts/forward_journal.py`, `tests/integration/test_journal_commands.py`, `docs/DECISIONS.md`, `MEETING_AGENT.md`.
 * **Verification**: Windows Python 3.12.10, `.venv\Scripts\python -m pytest tests -q`: 246 passed, one existing TestClient deprecation warning. All five new command tests passed using disposable storage.
+
+---
+## ADR-045: Notifications, dashboard, watchdog and a fallback data host
+* **Date**: 2026-11-22
+* **Status**: Accepted (owner's request: something concrete to see and check every morning)
+* **Context**: the hourly task froze on 2026-11-21 at 20:05 (the log shows the cycle header, then nothing until a manual Ctrl+C at 22:05) and Windows started no new run while the frozen one lived; 46 of 107 earlier runs failed with `getaddrinfo failed` (no DNS answer for api.binance.com); and "0 new signals" told the owner nothing.
+* **Decision**:
+  1. **Fallback host**: on a NETWORK error only (DNS, connection), after its retries, the public client switches to `https://data-api.binance.vision`, Binance's documented market-data-only base URL (no API key, serves `/api/v3/klines` and `/api/v3/exchangeInfo`) and keeps it for the session. HTTP errors and rate limits never switch hosts; if every host fails the client still fails closed. `ExchangeConfig.fallback_base_urls`, `packages/market_data/client.py`.
+  2. **Watchdog**: `scripts/journal_cycle.py` runs scan (15 min), settle (10 min), dashboard (10 min) and notify (3 min), each in its own process with a hard time limit, and records `knowledge/cycle_health.json` (last good scan, failures in 24 h). `scripts/journal_cycle.cmd` now calls it. A Task Scheduler limit of 30 minutes and "ignore new instance" were proposed to the owner as a second guard.
+  3. **Dashboard**: `scripts/dashboard.py` writes `reports/dashboard.html` (self-contained, refreshes every 5 minutes): system health, Bitcoin's daily trend, coins in an uptrend, signals waiting for a decision with the exact `decide` commands and their reasons for and against, the per-coin table of missing conditions, the journal, the review and the chain integrity. If the live fetch fails it shows the last saved view, marked as old.
+  4. **Notifications**: `scripts/notify.py` with a pure planner (`packages/notify/planner.py`): one message per new journal signal (with the decision deadline and command), one morning summary per day at `NOTIFY_SUMMARY_HOUR` UTC (default 7) even without signals, and one health alert when no scan succeeded for 6 hours (at most every 6 hours). Channels (`packages/notify/channels.py`): Windows toast (built in), phone push via ntfy (`NTFY_TOPIC` in `.env`), Telegram (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`). All optional and failure-tolerant; tokens are read from the environment or the git-ignored `.env`, never logged.
+  5. Market view logic moved to `packages/signals/market_view.py`, shared by `trader_view.py`, the dashboard and the summary.
+* **Not changed**: no rule, threshold, recipe or verdict; `scripts/forward_journal.py` (ADR-044 work by another agent, uncommitted at the time) was not edited.
+* **Privacy**: dashboard, market view, notification state and cycle health are git-ignored (they show the owner's decisions). An ntfy topic is public to anyone who knows its name: choose a long random name; messages contain paper signals only.
+* **Verification**: unit tests for the fallback host (DNS failure switches host, HTTP error does not, all hosts down fails closed) and for the planner (once per signal, no flood on first run, one summary per day, health alert cadence, optional channels). Watchdog checked with a step that hangs: killed at its limit, the next step still ran. Dashboard generated offline from the cache. Windows Python 3.12.10: 253 passed (231 plus 22 in `tests/unit/test_backtest.py` run alone), one existing TestClient deprecation warning. One manual `scripts/journal_cycle.cmd` run on 2026-11-22 11:55 UTC finished every step.
+* **Files**: `packages/market_data/client.py`, `packages/config/settings.py`, `packages/signals/market_view.py`, `packages/notify/`, `packages/reporting/dashboard.py`, `scripts/dashboard.py`, `scripts/notify.py`, `scripts/journal_cycle.py`, `scripts/journal_cycle.cmd`, `scripts/trader_view.py`, `.gitignore`, `tests/unit/test_client_fallback.py`, `tests/unit/test_notify.py`, `docs/MORNING.md`, `docs/DECISIONS.md`.

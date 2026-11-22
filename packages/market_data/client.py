@@ -55,6 +55,10 @@ class BinancePublicClient:
             },
         )
         self.last_used_weight_1m: int = 0
+        # ADR-045: hosts tried in order on network errors (only when this client owns its HTTP connection)
+        self._hosts = [self._config.base_url, *getattr(self._config, "fallback_base_urls", ())] if self._owns_client else [self._config.base_url]
+        self._host_index = 0
+        self.host_in_use: str = self._config.base_url
 
     def close(self) -> None:
         if self._owns_client:
@@ -82,8 +86,13 @@ class BinancePublicClient:
                 if attempt < attempts - 1:
                     self._sleep_fn(self._config.retry_backoff_seconds * (2**attempt))
                     continue
+                if self._host_index + 1 < len(self._hosts):  # ADR-045: switch to the next host and start again
+                    self._host_index += 1
+                    self.host_in_use = self._hosts[self._host_index]
+                    self._client.base_url = self.host_in_use
+                    return self._request_json(path, params)
                 raise BinanceAPIError(
-                    f"Network error requesting {path} after {attempts} attempt(s): {exc}"
+                    f"Network error requesting {path} after {attempts} attempt(s) on {len(self._hosts)} host(s): {exc}"
                 ) from exc
 
             weight_header = response.headers.get("X-MBX-USED-WEIGHT-1M")
