@@ -3,14 +3,16 @@
 Three kinds of message:
   1. a new journal signal (once per signal id), with the exact command to record the owner's decision;
   2. a morning summary once per day (even when there is no signal, so the owner always sees the system is alive);
-  3. a health alert when no scan has succeeded for HEALTH_ALERT_MS (at most one alert per HEALTH_ALERT_MS).
+  3. a health alert when no scan has succeeded for HEALTH_ALERT_MS (two missed hourly runs; repeated at most every
+     HEALTH_REPEAT_MS), and one "back online" message when a scan succeeds again after an alert (ADR-046).
 """
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
 
-HEALTH_ALERT_MS = 6 * 3_600_000
+HEALTH_ALERT_MS = 110 * 60_000  # two failed hourly runs (ADR-046; was 6 hours)
+HEALTH_REPEAT_MS = 6 * 3_600_000
 DECISION_WINDOW_MS = 4 * 3_600_000
 H4 = 14_400_000
 
@@ -69,7 +71,11 @@ def plan(records: list[dict], state: dict, view: dict | None, health: dict, now_
         msgs.append(("summary",) + summary_message(view, health, {"signals": len(records), "open": open_, "waiting_decision": waiting}))
         st["last_summary_day"] = today
     last_ok = health.get("last_scan_ok_ms") or 0
-    if last_ok and now_ms - last_ok > HEALTH_ALERT_MS and now_ms - st["last_health_alert_ms"] > HEALTH_ALERT_MS:
+    if st["last_health_alert_ms"] and last_ok > st["last_health_alert_ms"]:
+        msgs.append(("health", "Market data is back",
+                     f"Last successful scan: {_utc(last_ok)}. Missed candles were backfilled (up to 7 days)."))
+        st["last_health_alert_ms"] = 0
+    if last_ok and now_ms - last_ok > HEALTH_ALERT_MS and now_ms - st["last_health_alert_ms"] > HEALTH_REPEAT_MS:
         hours = (now_ms - last_ok) / 3_600_000
         msgs.append(("health", "No market data for %.0f hours" % hours,
                      f"Last successful scan: {_utc(last_ok)}. Check the internet connection and that the computer is awake. "

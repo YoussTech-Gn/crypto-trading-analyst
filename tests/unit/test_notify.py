@@ -29,13 +29,13 @@ def test_morning_summary_once_per_day_even_without_signals():
     view = {"btc_up": False, "up": [], "coins": 25, "signals": [], "close_calls": [{"coin": "XRP", "rule": "False break of a low"}]}
     msgs, st = plan([], {"initialized": True}, view, {"last_scan_ok_ms": T0 + 6 * 3_600_000}, T0 + 7 * 3_600_000 + 5)
     assert [m[0] for m in msgs] == ["summary"] and "DOWN" in msgs[0][2] and "XRP" in msgs[0][2]
-    again, _ = plan([], st, view, {"last_scan_ok_ms": T0 + 6 * 3_600_000}, T0 + 9 * 3_600_000)
+    again, _ = plan([], st, view, {"last_scan_ok_ms": T0 + 8 * 3_600_000}, T0 + 9 * 3_600_000)
     assert again == []
     early, _ = plan([], {"initialized": True}, view, {}, T0 + 5 * 3_600_000)
     assert early == []
 
 
-def test_health_alert_after_six_hours_without_a_good_scan_and_not_more_often():
+def test_health_alert_without_a_good_scan_is_not_repeated_every_hour():
     h = {"last_scan_ok_ms": T0}
     msgs, st = plan([], {"initialized": True}, None, h, T0 + HEALTH_ALERT_MS + 1, summary_hour_utc=25)
     assert [m[0] for m in msgs] == ["health"]
@@ -48,3 +48,20 @@ def test_channels_are_optional_and_env_file_is_read(tmp_path):
     assert load_env(tmp_path)["NTFY_TOPIC"] == "abc123"
     assert ntfy({}, "t", "b") == (False, "NTFY_TOPIC not set")
     assert telegram({}, "t", "b")[0] is False
+
+
+def test_health_alert_after_two_missed_hourly_runs():
+    h = {"last_scan_ok_ms": T0}
+    early, _ = plan([], {"initialized": True}, None, h, T0 + 3_600_000, summary_hour_utc=25)
+    assert early == []
+    msgs, _ = plan([], {"initialized": True}, None, h, T0 + 2 * 3_600_000, summary_hour_utc=25)
+    assert [m[0] for m in msgs] == ["health"]
+
+
+def test_back_online_message_once_after_an_alert():
+    _, st = plan([], {"initialized": True}, None, {"last_scan_ok_ms": T0}, T0 + 2 * 3_600_000, summary_hour_utc=25)
+    back = {"last_scan_ok_ms": T0 + 3 * 3_600_000}
+    msgs, st2 = plan([], st, None, back, T0 + 3 * 3_600_000 + 60_000, summary_hour_utc=25)
+    assert [m[1] for m in msgs] == ["Market data is back"]
+    again, _ = plan([], st2, None, back, T0 + 4 * 3_600_000, summary_hour_utc=25)
+    assert again == []

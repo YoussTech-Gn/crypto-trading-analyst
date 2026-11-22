@@ -66,6 +66,7 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 | ADR-043 | Record a project review and peer discussion in the root meeting file | Accepted | MEETING_AGENT.md |
 | ADR-044 | Serialize forward journal updates and recover an interrupted scan commit | Accepted | scripts/forward_journal.py, tests/integration/test_journal_commands.py |
 | ADR-045 | Notifications, dashboard, cycle watchdog and a market-data-only fallback host | Accepted | packages/notify/, packages/reporting/dashboard.py, scripts/journal_cycle.py, packages/market_data/client.py |
+| ADR-046 | Health alert after two missed hourly scans, plus a back-online message | Accepted | packages/notify/planner.py, tests/unit/test_notify.py |
 
 ## Open items and pending decisions
 * M6a lab run on the main basket is done (ADR-024). `--basket alt` is run once, by the overnight runner, on the frozen recipes (ADR-029).
@@ -631,3 +632,12 @@ Rules: a rejected idea is logged too (so it is not retried blindly); a changed d
 * **Privacy**: dashboard, market view, notification state and cycle health are git-ignored (they show the owner's decisions). An ntfy topic is public to anyone who knows its name: choose a long random name; messages contain paper signals only.
 * **Verification**: unit tests for the fallback host (DNS failure switches host, HTTP error does not, all hosts down fails closed) and for the planner (once per signal, no flood on first run, one summary per day, health alert cadence, optional channels). Watchdog checked with a step that hangs: killed at its limit, the next step still ran. Dashboard generated offline from the cache. Windows Python 3.12.10: 253 passed (231 plus 22 in `tests/unit/test_backtest.py` run alone), one existing TestClient deprecation warning. One manual `scripts/journal_cycle.cmd` run on 2026-11-22 11:55 UTC finished every step.
 * **Files**: `packages/market_data/client.py`, `packages/config/settings.py`, `packages/signals/market_view.py`, `packages/notify/`, `packages/reporting/dashboard.py`, `scripts/dashboard.py`, `scripts/notify.py`, `scripts/journal_cycle.py`, `scripts/journal_cycle.cmd`, `scripts/trader_view.py`, `.gitignore`, `tests/unit/test_client_fallback.py`, `tests/unit/test_notify.py`, `docs/MORNING.md`, `docs/DECISIONS.md`.
+
+## ADR-046: Health alert after two missed hourly scans
+* **Date**: 2026-11-22
+* **Status**: Accepted (owner reported that no notification arrived while scans were failing)
+* **Context**: on 2026-11-22 every scheduled scan from 13:05 to 15:05 UTC failed with `getaddrinfo failed` on both hosts (also 02:45 to 10:05 UTC), while name resolution of both Binance hosts, ntfy.sh and google.com worked from an interactive PowerShell at 15:40 and a manual cycle at 15:41 succeeded. The likely cause is the laptop's network being unavailable to scheduled runs while the owner is away (Modern Standby, `powercfg /a`: S0 Low Power Idle, Network Connected); not yet proven. With the 6-hour threshold of ADR-045 the owner heard nothing for hours while the system knew it was blind.
+* **Decision**: the health alert fires when no scan has succeeded for 110 minutes (two missed hourly runs; one miss is treated as transient), repeated at most every 6 hours; when a scan succeeds after an alert, one "Market data is back" message is sent and the alert state resets.
+* **Not changed**: no rule, threshold, recipe, journal record or verdict; the cause of the failed scheduled runs is not fixed here.
+* **Verification**: `tests/unit/test_notify.py` (no alert after one missed run, alert after two, one back-online message); one morning-summary test fixture moved its last good scan from 3 h to 1 h before the call, because a 3-hour gap now correctly raises an alert. Linux VM: 215 unit tests passed (`test_backtest.py` excluded for time).
+* **Files**: `packages/notify/planner.py`, `tests/unit/test_notify.py`, `docs/DECISIONS.md`.
